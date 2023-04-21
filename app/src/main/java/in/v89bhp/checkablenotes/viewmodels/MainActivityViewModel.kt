@@ -9,6 +9,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import `in`.v89bhp.checkablenotes.composables.CheckableItem
+import `in`.v89bhp.checkablenotes.composables.setDifference
 import kotlinx.coroutines.MainScope
 
 class MainActivityViewModel : ViewModel() {
@@ -38,9 +39,18 @@ class MainActivityViewModel : ViewModel() {
             out the items deleted by the user. Then delete these items from list.
         */
 
-        (list.toSet().minus(newList.toSet())).forEach { deletedItem ->
-            Log.i(TAG, "Removing item with Id: ${deletedItem.id} and message: ${deletedItem.message}")
-            list.removeAll { it == deletedItem }
+        if (!list.isEmpty()) {
+            if (newList.isEmpty()) {
+                list.removeAll { true }
+            } else {
+                setDifference(list.toSet(), newList.toSet()).forEach { deletedItem ->
+                    Log.i(
+                        TAG,
+                        "Removing item with Id: ${deletedItem.id} and message: ${deletedItem.message}"
+                    )
+                    list.removeAll { it == deletedItem }
+                }
+            }
         }
 
 
@@ -51,19 +61,26 @@ class MainActivityViewModel : ViewModel() {
             Find the maximum id in the current list and then set its increments as ids
             of the new items being added.
          */
-
-        (newList.toSet().minus(list.toSet())).forEach { newItem ->
-            Log.i(TAG, "Adding new item with Id: ${newItem.id} and message>>${newItem.message}<<")
-            if (!list.isEmpty()) newItem.id = ++maxId
-            list.add(newItem)
+        if (!newList.isEmpty()) {
+            if (list.isEmpty()) {
+                list.addAll(newList)
+            } else {
+                setDifference(newList.toSet(), list.toSet()).forEach { newItem ->
+                    Log.i(
+                        TAG,
+                        "Adding new item with Id: ${newItem.id} and message>>${newItem.message}<<"
+                    )
+                    newItem.id = ++maxId
+                    list.add(newItem)
+                }
+            }
         }
 
-//        Log.i(TAG, list.joinToString() { "Id: ${it.id} Message: ${it.message}" })
-//        list.removeAll { true }
-//        list.addAll(value.text.split('\n').mapIndexed { index, value ->
-//            CheckableItem(index, value)
-//        })
+        rearrangeList()
+    }
 
+    private fun rearrangeList() {
+        // TODO
     }
 
     fun onCheckedChange(checkableItem: CheckableItem, isChecked: Boolean) {

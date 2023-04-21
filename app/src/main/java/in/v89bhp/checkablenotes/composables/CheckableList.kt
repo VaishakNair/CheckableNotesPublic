@@ -111,3 +111,17 @@ fun main() {
     println("Set difference custom: $differenceSet")
 
 }
+
+fun setDifference(set1: Set<CheckableItem>, set2: Set<CheckableItem>): Set<CheckableItem> {
+    val differenceSet = mutableSetOf<CheckableItem>()
+    set1.forEach { set2Item ->
+        var found = false
+        set2.forEach { set1Item ->
+            if (set2Item == set1Item) {
+                found = true
+            }
+        }
+        if (!found) differenceSet.add(set2Item)
+    }
+    return differenceSet
+}
