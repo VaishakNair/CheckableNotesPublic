@@ -69,7 +69,7 @@ fun MyScreenContent(
                 )
             }
         }
-        if (selectedTabIndex == 1) { // Tab 1
+        if (selectedTabIndex == 0) { // Tab 1
             TextField(
                 value = text,
                 onValueChange = {
