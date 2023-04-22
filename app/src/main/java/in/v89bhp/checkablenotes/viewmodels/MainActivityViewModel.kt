@@ -69,13 +69,18 @@ class MainActivityViewModel : ViewModel() {
             if (list.isEmpty()) {
                 list.addAll(newList)
             } else {
+                val noCheckedItem = list.none { it.isChecked }
                 setDifference(newList.toSet(), list.toSet()).forEach { newItem ->
                     Log.i(
                         TAG,
                         "Adding new item with Id: ${newItem.id} and message>>${newItem.message}<<"
                     )
                     newItem.id = ++maxId
-                    list.add(0, newItem)
+                    // Add newly added item to the end of the list if it currently
+                    // doesn't contain any checked item. Otherwise add it to the beginning
+                    // This preserves the initial order of items input by the user before
+                    // any item is checked.
+                    list.add(if (noCheckedItem) list.size else 0, newItem)
                 }
             }
         }
