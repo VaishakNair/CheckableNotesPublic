@@ -57,7 +57,7 @@ fun MyScreenContent(
 //    var text by rememberSaveable(stateSaver = TextFieldValue.Saver) {
 //        mutableStateOf(TextFieldValue("", TextRange(0, 7)))
 //    }
-    var text = viewModel.text
+
     val titles = listOf("Input", "Checkable List")
     Column {
         TabRow(selectedTabIndex = selectedTabIndex) {
@@ -71,7 +71,7 @@ fun MyScreenContent(
         }
         if (selectedTabIndex == 0) { // Tab 1
             TextField(
-                value = text,
+                value = viewModel.text,
                 onValueChange = {
                     viewModel.text = it
                     viewModel.updateList(it)
