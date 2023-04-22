@@ -22,8 +22,12 @@ class MainActivityViewModel : ViewModel() {
 
 
     fun updateList(value: TextFieldValue) {
-        val newList = value.text.trim().split('\n').mapIndexed { index, value ->
-            CheckableItem(index, value)
+        val newList = if (value.text.trim() == "") {
+            emptyList()
+        } else {
+            value.text.trim().split('\n').mapIndexed { index, value ->
+                CheckableItem(index, value)
+            }
         }
         Log.i(TAG, "NewList:")
         Log.i(TAG, newList.joinToString() { "Id: ${it.id} Message: ${it.message}" })
@@ -71,16 +75,10 @@ class MainActivityViewModel : ViewModel() {
                         "Adding new item with Id: ${newItem.id} and message>>${newItem.message}<<"
                     )
                     newItem.id = ++maxId
-                    list.add(newItem)
+                    list.add(0, newItem)
                 }
             }
         }
-
-        rearrangeList()
-    }
-
-    private fun rearrangeList() {
-        // TODO
     }
 
     fun onCheckedChange(checkableItem: CheckableItem, isChecked: Boolean) {
