@@ -9,7 +9,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import `in`.v89bhp.checkablenotes.composables.CheckableItem
-import `in`.v89bhp.checkablenotes.composables.setDifference
+import `in`.v89bhp.checkablenotes.setDifference
 import kotlinx.coroutines.MainScope
 
 class MainActivityViewModel : ViewModel() {
