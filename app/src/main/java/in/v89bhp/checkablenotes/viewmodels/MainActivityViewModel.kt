@@ -10,7 +10,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import `in`.v89bhp.checkablenotes.composables.CheckableItem
 import `in`.v89bhp.checkablenotes.setDifference
-import kotlinx.coroutines.MainScope
 
 class MainActivityViewModel : ViewModel() {
 
@@ -86,7 +85,9 @@ class MainActivityViewModel : ViewModel() {
         }
     }
 
+
     fun onCheckedChange(checkableItem: CheckableItem, isChecked: Boolean) {
+
         val changedItemIndex = list.indexOfFirst { it.id == checkableItem.id }
         checkableItem.isChecked = isChecked
 
@@ -107,3 +108,4 @@ class MainActivityViewModel : ViewModel() {
         }
     }
 }
+
