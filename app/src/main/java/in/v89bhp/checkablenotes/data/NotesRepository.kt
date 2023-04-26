@@ -2,16 +2,13 @@ package `in`.v89bhp.checkablenotes.data
 
 import android.content.Context
 import com.google.gson.Gson
-import `in`.v89bhp.checkablenotes.composables.CheckableItem
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
-import kotlin.streams.toList
 
-class NotesRepository(private val mainDispatcher: CoroutineDispatcher) {
+class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
 
     suspend fun loadNote(context: Context, fileName: String): Note {
-        return withContext(mainDispatcher) {
+        return withContext(ioDispatcher) {
             val jsonObjectString = context.openFileInput(fileName).bufferedReader().useLines() {
 
                 it.toList()
@@ -43,9 +40,10 @@ class NotesRepository(private val mainDispatcher: CoroutineDispatcher) {
                 )
             })
         val jsonObjectString = Gson().toJson(serializableNote)
-
-        fileName?.let { context.deleteFile(it) }// File already exists. Delete it.
-        context.openFileOutput("${System.currentTimeMillis()}.json", Context.MODE_PRIVATE)
-            .use { it.write(jsonObjectString.toByteArray()) }
+        withContext(ioDispatcher) {
+            fileName?.let { context.deleteFile(it) }// File already exists. Delete it.
+            context.openFileOutput("${System.currentTimeMillis()}.json", Context.MODE_PRIVATE)
+                .use { it.write(jsonObjectString.toByteArray()) }
+        }
     }
 }
