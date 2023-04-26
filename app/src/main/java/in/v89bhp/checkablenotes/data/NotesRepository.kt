@@ -10,11 +10,13 @@ import kotlin.streams.toList
 
 class NotesRepository(private val mainDispatcher: CoroutineDispatcher) {
 
-
     suspend fun loadNote(context: Context, fileName: String): Note {
         return withContext(mainDispatcher) {
-            val jsonObjectString = context.openFileInput(fileName).bufferedReader().lines().toList()
-                .joinToString(separator = "\n")
+            val jsonObjectString = context.openFileInput(fileName).bufferedReader().useLines() {
+
+                it.toList()
+                    .joinToString(separator = "\n")
+            }
             Gson().fromJson(jsonObjectString, SerializableNote::class.java)
                 .let { serializableNote ->
                     Note(
@@ -30,7 +32,7 @@ class NotesRepository(private val mainDispatcher: CoroutineDispatcher) {
         }
     }
 
-    suspend fun saveNote(context: Context, note: Note) {
+    suspend fun saveNote(context: Context, note: Note, fileName: String?) {
         val serializableNote = SerializableNote(
             text = note.text,
             list = note.list.map { checkableItem ->
@@ -41,6 +43,9 @@ class NotesRepository(private val mainDispatcher: CoroutineDispatcher) {
                 )
             })
         val jsonObjectString = Gson().toJson(serializableNote)
-        // TODO Generate file name and dump the jsonObjectString to it.
+
+        fileName?.let { context.deleteFile(it) }// File already exists. Delete it.
+        context.openFileOutput("${System.currentTimeMillis()}.json", Context.MODE_PRIVATE)
+            .use { it.write(jsonObjectString.toByteArray()) }
     }
 }
