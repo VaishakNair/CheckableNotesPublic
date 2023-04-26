@@ -1,8 +1,5 @@
 package `in`.v89bhp.checkablenotes
 
-import android.util.Log
-import androidx.compose.ui.text.input.TextFieldValue
-import com.google.gson.Gson
 import `in`.v89bhp.checkablenotes.composables.CheckableItem
 
 //fun main() {
@@ -31,24 +28,6 @@ import `in`.v89bhp.checkablenotes.composables.CheckableItem
 //
 //}
 
-
-data class Note(val text: String, val checkableItems: List<SerializableCheckableItem>)
-data class SerializableCheckableItem(val id: Int, val message: String, val isChecked: Boolean)
-
-fun serializeNote(text: String, list: List<CheckableItem>): String {
-    val note = Note(text, list.map { SerializableCheckableItem(it.id, it.message, it.isChecked) })
-    return Gson().toJson(note)
-}
-
-fun deSerializeNote(jsonObject: String): Pair<TextFieldValue, List<CheckableItem>> {
-    val note = Gson().fromJson(jsonObject, Note::class.java).also { noteDS ->
-        Log.i("JSONObject", noteDS.text + " List: " + noteDS.checkableItems.joinToString())
-    }
-
-    return Pair(
-        TextFieldValue(note.text),
-        note.checkableItems.map { CheckableItem(it.id, it.message, it.isChecked) })
-}
 
 /**
  * Kotlin set difference implementation is not returning expected results.
