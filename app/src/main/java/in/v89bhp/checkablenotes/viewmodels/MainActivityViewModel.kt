@@ -64,7 +64,7 @@ class MainActivityViewModel : ViewModel() {
             Find the maximum id in the current list and then set its increments as ids
             of the new items being added.
          */
-        if (!newList.isEmpty()) {
+        if (newList.isNotEmpty()) {
             if (list.isEmpty()) {
                 list.addAll(newList)
             } else {
