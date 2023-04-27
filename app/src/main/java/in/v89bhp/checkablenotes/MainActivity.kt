@@ -9,7 +9,6 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import `in`.v89bhp.checkablenotes.composables.NoteScreen
 import `in`.v89bhp.checkablenotes.ui.theme.CheckableNotesTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApp {
-                NoteScreen()
+                CheckableNotesApp()
             }
         }
     }
@@ -45,6 +44,6 @@ fun MyApp(content: @Composable () -> Unit) {
 @Composable
 fun DefaultPreview() {
     MyApp {
-        NoteScreen()
+        CheckableNotesApp()
     }
 }

@@ -1,9 +1,10 @@
-package `in`.v89bhp.checkablenotes.composables
+package `in`.v89bhp.checkablenotes.ui.note
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -12,14 +13,61 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.material.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 
-@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun Note(
+    modifier: Modifier = Modifier,
+    viewModel: NoteViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
+    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
+    val titles = listOf("Input", "Checkable List")
+
+    Column {
+        TabRow(selectedTabIndex = selectedTabIndex) {
+            titles.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index },
+                    text = { Text(text = title, maxLines = 2, overflow = TextOverflow.Ellipsis) }
+                )
+            }
+        }
+        if (selectedTabIndex == 0) { // Tab 1
+            TextField(
+                value = viewModel.text,
+                onValueChange = {
+                    viewModel.text = it
+                    viewModel.updateList(it)
+                },
+                label = { Text("Enter Items Line by Line:") },
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            )
+        } else { // Tab 2
+            CheckableList(checkableItems = viewModel.list,
+                modifier = Modifier.padding(16.dp),
+                onCheckedChange = { checkableItem, newValue ->
+                    viewModel.onCheckedChange(checkableItem, newValue)
+                })
+        }
+    }
+}
+
 @Composable
 fun CheckableList(
     checkableItems: List<CheckableItem>,
@@ -69,18 +117,3 @@ fun ItemCard(
         }
     }
 }
-
-
-//@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
-//@Composable
-//fun ItemCardPreview() {
-//    ItemCard(
-//        modifier = Modifier.padding(8.dp),
-//        checkableItem = CheckableItem(3, "Test", true),
-//        onCheckedChange = {})
-//
-//}
-
-
-
-

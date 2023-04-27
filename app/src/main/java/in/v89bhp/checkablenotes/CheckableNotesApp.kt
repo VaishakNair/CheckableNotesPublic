@@ -22,6 +22,11 @@ fun CheckableNotesApp(
                 }
             )
         }
+
+        composable(Screen.Note.route) {
+            // TODO Call Note() composable
+        }
+
 //        composable(Screen.Player.route) { backStackEntry ->
 //            val playerViewModel: PlayerViewModel = viewModel(
 //                factory = PlayerViewModel.provideFactory(

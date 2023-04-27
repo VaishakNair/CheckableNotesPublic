@@ -7,6 +7,11 @@ import kotlinx.coroutines.withContext
 
 class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
 
+    suspend fun loadNotes(context: Context): List<Note> = context.fileList().map { fileName ->
+        loadNote(context, fileName)
+    }
+
+
     suspend fun loadNote(context: Context, fileName: String): Note {
         return withContext(ioDispatcher) {
             val jsonObjectString = context.openFileInput(fileName).bufferedReader().useLines() {

@@ -1,4 +1,4 @@
-package `in`.v89bhp.checkablenotes.viewmodels
+package `in`.v89bhp.checkablenotes.ui.note
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -8,12 +8,12 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
-import `in`.v89bhp.checkablenotes.composables.CheckableItem
+import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.setDifference
 
-class MainActivityViewModel : ViewModel() {
+class NoteViewModel : ViewModel() {
 
-    val TAG = "MainActivityViewModel"
+    val TAG = "NoteViewModel"
 
     var text by mutableStateOf(TextFieldValue("", TextRange(0, 7)))
 

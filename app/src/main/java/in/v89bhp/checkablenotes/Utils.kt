@@ -1,6 +1,6 @@
 package `in`.v89bhp.checkablenotes
 
-import `in`.v89bhp.checkablenotes.composables.CheckableItem
+import `in`.v89bhp.checkablenotes.data.CheckableItem
 
 //fun main() {
 //    val set1 = setOf(CheckableItem(1, "b"), CheckableItem(0, "a") )
