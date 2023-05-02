@@ -26,7 +26,7 @@ fun CheckableNotesApp(
 
         composable(Screen.Note.route) { backStackEntry ->
             // TODO Call Note() composable
-            Note(backStackEntry.arguments?.getString("fileName"))
+            Note(backStackEntry.arguments?.getString("fileName")!!)
         }
 
 //        composable(Screen.Player.route) { backStackEntry ->

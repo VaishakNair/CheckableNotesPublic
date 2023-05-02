@@ -17,9 +17,11 @@ import `in`.v89bhp.checkablenotes.data.NotesRepository
 import `in`.v89bhp.checkablenotes.setDifference
 import kotlinx.coroutines.launch
 
-class NoteViewModel(application: Application, private val notesRepository: NotesRepository = Graph.notesRepository) : AndroidViewModel(application) {
+class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     val TAG = "NoteViewModel"
+
+    private val notesRepository: NotesRepository = Graph.notesRepository
 
     var text by mutableStateOf(TextFieldValue("", TextRange(0, 7)))
 
@@ -32,6 +34,10 @@ class NoteViewModel(application: Application, private val notesRepository: Notes
             text = note.text
             list.addAll(note.list)
         }
+    }
+
+    fun saveNote(fileName: String?) {
+        // TODO
     }
 
 
