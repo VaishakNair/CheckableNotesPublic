@@ -1,5 +1,6 @@
 package `in`.v89bhp.checkablenotes.ui.note
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,17 +8,31 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import `in`.v89bhp.checkablenotes.Graph
 import `in`.v89bhp.checkablenotes.data.CheckableItem
+import `in`.v89bhp.checkablenotes.data.NotesRepository
 import `in`.v89bhp.checkablenotes.setDifference
+import kotlinx.coroutines.launch
 
-class NoteViewModel : ViewModel() {
+class NoteViewModel(application: Application, private val notesRepository: NotesRepository = Graph.notesRepository) : AndroidViewModel(application) {
 
     val TAG = "NoteViewModel"
 
     var text by mutableStateOf(TextFieldValue("", TextRange(0, 7)))
 
     val list = mutableListOf<CheckableItem>().toMutableStateList()
+
+
+    fun loadNote(fileName: String) {
+        viewModelScope.launch {
+            val note = notesRepository.loadNote(getApplication(), fileName)
+            text = note.text
+            list.addAll(note.list)
+        }
+    }
 
 
     fun updateList(value: TextFieldValue) {

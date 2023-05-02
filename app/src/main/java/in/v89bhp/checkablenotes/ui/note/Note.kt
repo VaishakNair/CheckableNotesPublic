@@ -30,13 +30,17 @@ import `in`.v89bhp.checkablenotes.data.CheckableItem
 
 @Composable
 fun Note(
+    fileName: String?,
     modifier: Modifier = Modifier,
     viewModel: NoteViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+
+    fileName?.let { viewModel.loadNote(fileName) }
+
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
     val titles = listOf("Input", "Checkable List")
 
-    Column {
+    Column(modifier = modifier) {
         TabRow(selectedTabIndex = selectedTabIndex) {
             titles.forEachIndexed { index, title ->
                 Tab(

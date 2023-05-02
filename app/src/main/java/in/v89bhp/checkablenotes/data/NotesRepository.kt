@@ -7,8 +7,11 @@ import kotlinx.coroutines.withContext
 
 class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
 
-    suspend fun loadNotes(context: Context): List<Note> = context.fileList().map { fileName ->
-        loadNote(context, fileName)
+    suspend fun loadNotes(context: Context): Pair<List<String>,List<Note>> {
+        val fileNames: List<String> = context.fileList().toList()
+        val notesList = fileNames.map { fileName ->
+            loadNote(context, fileName) }
+        return Pair(fileNames, notesList)
     }
 
 

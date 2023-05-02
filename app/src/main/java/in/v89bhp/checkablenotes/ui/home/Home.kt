@@ -1,10 +1,11 @@
 package `in`.v89bhp.checkablenotes.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -21,30 +22,51 @@ fun Home(
     viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
 
     ) {
-    NotesGrid(viewModel.notesList)
+
+
+
+    NotesGrid(
+        fileNames = viewModel.fileNamesList,
+        notes = viewModel.notesList,
+        navigateToNote = navigateToNote,
+        modifier = modifier
+    )
 }
 
 @Composable
-fun NotesGrid(notes: List<Note>, modifier: Modifier = Modifier) {
+fun NotesGrid(
+    fileNames: List<String>,
+    notes: List<Note>,
+    navigateToNote: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(2)
     ) {
-        items(notes) { note ->
-            NoteCard(note.text.text)
+        itemsIndexed(notes) { index, note ->
+            NoteCard(note = note.text.text,
+                onClick = { navigateToNote(fileNames[index]) })
         }
     }
 }
 
 @Composable
-fun NoteCard(note: String, modifier: Modifier = Modifier) {
+fun NoteCard(
+    note: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     // TODO
     Surface(
         shape = MaterialTheme.shapes.medium,
-        modifier = modifier.size(width = 150.dp, height = 150.dp)
+        modifier = modifier
+            .size(width = 150.dp, height = 150.dp)
+            .clickable { onClick() }
     ) {
         Text(
-            text = note
+            text = note,
+            modifier = Modifier.padding(8.dp)
         )
     }
 
@@ -55,6 +77,7 @@ fun NoteCard(note: String, modifier: Modifier = Modifier) {
 fun NoteCardPreview() {
     NoteCard(
         note = "Tomato\nPotato\nDates",
+        onClick = {},
         modifier = Modifier.padding(8.dp)
     )
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import `in`.v89bhp.checkablenotes.ui.home.Home
+import `in`.v89bhp.checkablenotes.ui.note.Note
 
 @Composable
 fun CheckableNotesApp(
@@ -23,8 +24,9 @@ fun CheckableNotesApp(
             )
         }
 
-        composable(Screen.Note.route) {
+        composable(Screen.Note.route) { backStackEntry ->
             // TODO Call Note() composable
+            Note(backStackEntry.arguments?.getString("fileName"))
         }
 
 //        composable(Screen.Player.route) { backStackEntry ->
