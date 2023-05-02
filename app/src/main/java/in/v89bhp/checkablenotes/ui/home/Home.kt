@@ -36,7 +36,6 @@ fun Home(
             }
         }
     ) { contentPadding ->
-//        Text(text = "Content", modifier = modifier.padding(contentPadding))
         NotesGrid(
             fileNames = viewModel.fileNamesList,
             notes = viewModel.notesList,

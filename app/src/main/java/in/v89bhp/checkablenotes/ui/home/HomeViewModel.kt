@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application
                     ) : AndroidViewModel(application) {
+    private val TAG = "HomeViewModel"
     private val notesRepository: NotesRepository = Graph.notesRepository
     var notesList = mutableListOf<Note>().toMutableStateList()
     var fileNamesList = mutableListOf<String>().toMutableStateList()
@@ -19,7 +20,7 @@ class HomeViewModel(application: Application
         viewModelScope.launch {
             val (fileNames, notes) = notesRepository.loadNotes(getApplication())
             fileNamesList.addAll(fileNames)
-            notesList.addAll(notes) // TODO How to get app context in viewmodel? Get from app state?
+            notesList.addAll(notes)
         }
     }
 }

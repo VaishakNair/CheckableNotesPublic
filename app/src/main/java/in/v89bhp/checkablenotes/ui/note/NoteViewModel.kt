@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
-    val TAG = "NoteViewModel"
+    private val TAG = "NoteViewModel"
 
     private val notesRepository: NotesRepository = Graph.notesRepository
 
