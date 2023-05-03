@@ -36,14 +36,14 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun saveNote(fileName: String) {
-        // TODO
-        viewModelScope.launch {
-            notesRepository.saveNote(context = getApplication(),
-            note = Note(text = text, list = list),
-            fileName = if (fileName == "newNote") null else fileName)
-        }
-    }
+//    fun saveNote(fileName: String) {
+//        // TODO
+//        viewModelScope.launch {
+//            notesRepository.saveNote(context = getApplication(),
+//            note = Note(text = text, list = list),
+//            fileName = if (fileName == "newNote") null else fileName)
+//        }
+//    }
 
 
     fun updateList(value: TextFieldValue) {

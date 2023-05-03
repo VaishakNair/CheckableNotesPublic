@@ -25,7 +25,7 @@ fun CheckableNotesApp(
 
         composable(Screen.Note.route) { backStackEntry ->
             Note(fileName = backStackEntry.arguments?.getString("fileName")!!,
-            navigateBack = {appState.navigateBack()})
+                navigateBack = { appState.navigateBack() })
         }
 
 //        composable(Screen.Player.route) { backStackEntry ->

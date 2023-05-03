@@ -1,5 +1,6 @@
 package `in`.v89bhp.checkablenotes.ui.note
 
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,19 +26,26 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import `in`.v89bhp.checkablenotes.data.CheckableItem
+import `in`.v89bhp.checkablenotes.ui.home.HomeViewModel
 
 @Composable
 fun Note(
     fileName: String,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: NoteViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: NoteViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    homeViewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
+        viewModelStoreOwner = LocalContext.current as ComponentActivity
+    )
 ) {
 
-    if (fileName != "newNote") { viewModel.loadNote(fileName) }
+    if (fileName != "newNote") {
+        viewModel.loadNote(fileName)
+    }
 
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
     val titles = listOf("Input", "Checkable List")
@@ -73,7 +81,9 @@ fun Note(
         }
 
         BackHandler(true) {
-            viewModel.saveNote(fileName)
+            if (viewModel.text.text.isNotEmpty()) {
+                homeViewModel.saveNote(fileName, viewModel.text, viewModel.list)
+            }
             navigateBack()
         }
     }
