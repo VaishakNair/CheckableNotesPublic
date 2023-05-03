@@ -1,5 +1,6 @@
 package `in`.v89bhp.checkablenotes.ui.note
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -68,6 +69,10 @@ fun Note(
                 onCheckedChange = { checkableItem, newValue ->
                     viewModel.onCheckedChange(checkableItem, newValue)
                 })
+        }
+
+        BackHandler(true) {
+            viewModel.saveNote(fileName)
         }
     }
 }

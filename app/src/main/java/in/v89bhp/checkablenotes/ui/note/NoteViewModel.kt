@@ -9,10 +9,10 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.v89bhp.checkablenotes.Graph
 import `in`.v89bhp.checkablenotes.data.CheckableItem
+import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.data.NotesRepository
 import `in`.v89bhp.checkablenotes.setDifference
 import kotlinx.coroutines.launch
@@ -36,8 +36,13 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun saveNote(fileName: String?) {
+    fun saveNote(fileName: String) {
         // TODO
+        viewModelScope.launch {
+            notesRepository.saveNote(context = getApplication(),
+            note = Note(text = text, list = list),
+            fileName = if (fileName == "newNote") null else fileName)
+        }
     }
 
 
