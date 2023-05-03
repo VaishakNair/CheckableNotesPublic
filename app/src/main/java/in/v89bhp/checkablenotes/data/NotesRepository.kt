@@ -5,14 +5,20 @@ import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
     val TAG = "NotesRepository"
-    suspend fun loadNotes(context: Context): Pair<List<String>,List<Note>> {
-        val fileNames: List<String> = context.fileList().toList().filter { fileName -> fileName.endsWith(".json") }
-        // TODO Sort file names by their last modified time (descending)
+    suspend fun loadNotes(context: Context): Pair<List<String>, List<Note>> {
+        val fileNames: List<String> =
+            context.fileList().toList().filter { fileName -> fileName.endsWith(".json") }
+                .sortedByDescending { fileName ->
+                    File(context.filesDir, fileName).lastModified()
+                }
+
         val notesList = fileNames.map { fileName ->
-            loadNote(context, fileName) }
+            loadNote(context, fileName)
+        }
         return Pair(fileNames, notesList)
     }
 
