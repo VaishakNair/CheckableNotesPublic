@@ -24,6 +24,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     private val notesRepository: NotesRepository = Graph.notesRepository
 
+    var firstTime = true
     var text by mutableStateOf(TextFieldValue("", TextRange(0, 7)))
 
     val list = mutableListOf<CheckableItem>().toMutableStateList()

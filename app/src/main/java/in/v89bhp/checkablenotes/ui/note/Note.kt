@@ -22,6 +22,7 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,12 +44,14 @@ fun Note(
     )
 ) {
 
-
-    viewModel.loadNote(fileName)
+    if (viewModel.firstTime) {
+        viewModel.loadNote(fileName)
+        viewModel.firstTime = false
+    }
 
 
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
-    val titles = listOf("Input", "Checkable List")
+    val titles = listOf("Note", "Checkable List")
 
     Column(modifier = modifier) {
         TabRow(selectedTabIndex = selectedTabIndex) {
