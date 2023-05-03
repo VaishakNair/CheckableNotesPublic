@@ -15,6 +15,7 @@ fun CheckableNotesApp(
         navController = appState.navController,
         startDestination = Screen.Home.route
     ) {
+
         composable(Screen.Home.route) { backStackEntry ->
             Home(
                 navigateToNote = { fileName ->

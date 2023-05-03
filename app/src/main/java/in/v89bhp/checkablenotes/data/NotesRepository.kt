@@ -1,12 +1,13 @@
 package `in`.v89bhp.checkablenotes.data
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
-
+    val TAG = "NotesRepository"
     suspend fun loadNotes(context: Context): Pair<List<String>,List<Note>> {
         val fileNames: List<String> = context.fileList().toList().filter { fileName -> fileName.endsWith(".json") }
         val notesList = fileNames.map { fileName ->
@@ -16,12 +17,15 @@ class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
 
 
     suspend fun loadNote(context: Context, fileName: String): Note {
+        Log.i(TAG, "Loading note from file $fileName")
         return withContext(ioDispatcher) {
             val jsonObjectString = context.openFileInput(fileName).bufferedReader().useLines() {
 
                 it.toList()
                     .joinToString(separator = "\n")
+
             }
+            Log.i(TAG, "JSON Object String (loaded from file): $jsonObjectString")
             Gson().fromJson(jsonObjectString, SerializableNote::class.java)
                 .let { serializableNote ->
                     Note(
@@ -48,6 +52,7 @@ class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
                 )
             })
         val jsonObjectString = Gson().toJson(serializableNote)
+        Log.i(TAG, "JSON Object string (to be saved): $jsonObjectString")
         withContext(ioDispatcher) {
             fileName?.let { context.deleteFile(it) }// File already exists. Delete it.
             context.openFileOutput("${System.currentTimeMillis()}.json", Context.MODE_PRIVATE)
