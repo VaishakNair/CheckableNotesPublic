@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import `in`.v89bhp.checkablenotes.Screen
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 
@@ -36,7 +35,7 @@ fun Home(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { navigateToNote("newNote") }) {
+            FloatingActionButton(onClick = { navigateToNote("${System.currentTimeMillis()}.json") }) {
                 Icon(Icons.Filled.Add, "New note")
             }
         }
@@ -78,7 +77,7 @@ fun NoteCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // TODO
+
     Surface(
         shape = MaterialTheme.shapes.medium,
         modifier = modifier

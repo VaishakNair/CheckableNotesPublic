@@ -43,9 +43,9 @@ fun Note(
     )
 ) {
 
-    if (fileName != "newNote") {
-        viewModel.loadNote(fileName)
-    }
+
+    viewModel.loadNote(fileName)
+
 
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
     val titles = listOf("Input", "Checkable List")

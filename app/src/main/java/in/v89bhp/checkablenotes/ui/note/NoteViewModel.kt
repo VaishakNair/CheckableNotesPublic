@@ -16,6 +16,7 @@ import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.data.NotesRepository
 import `in`.v89bhp.checkablenotes.setDifference
 import kotlinx.coroutines.launch
+import java.io.FileNotFoundException
 
 class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -30,20 +31,18 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loadNote(fileName: String) {
         viewModelScope.launch {
-            val note = notesRepository.loadNote(getApplication(), fileName)
-            text = note.text
-            list.addAll(note.list)
+            try {
+                val note = notesRepository.loadNote(getApplication(), fileName)
+                text = note.text
+                list.removeAll { true }
+                list.addAll(note.list)
+            } catch (ex: FileNotFoundException) {
+                Log.i(TAG, ex.message!!)
+            }
         }
     }
 
-//    fun saveNote(fileName: String) {
-//        // TODO
-//        viewModelScope.launch {
-//            notesRepository.saveNote(context = getApplication(),
-//            note = Note(text = text, list = list),
-//            fileName = if (fileName == "newNote") null else fileName)
-//        }
-//    }
+
 
 
     fun updateList(value: TextFieldValue) {

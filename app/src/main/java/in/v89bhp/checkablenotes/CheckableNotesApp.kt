@@ -15,7 +15,6 @@ fun CheckableNotesApp(
         navController = appState.navController,
         startDestination = Screen.Home.route
     ) {
-
         composable(Screen.Home.route) { backStackEntry ->
             Home(
                 navigateToNote = { fileName ->
@@ -28,21 +27,5 @@ fun CheckableNotesApp(
             Note(fileName = backStackEntry.arguments?.getString("fileName")!!,
                 navigateBack = { appState.navigateBack() })
         }
-
-//        composable(Screen.Player.route) { backStackEntry ->
-//            val playerViewModel: PlayerViewModel = viewModel(
-//                factory = PlayerViewModel.provideFactory(
-//                    owner = backStackEntry,
-//                    defaultArgs = backStackEntry.arguments
-//                )
-//            )
-//            PlayerScreen(
-//                playerViewModel,
-//                windowSizeClass,
-//                displayFeatures,
-//                onBackPress = appState::navigateBack
-//            )
-//        }
     }
-
 }

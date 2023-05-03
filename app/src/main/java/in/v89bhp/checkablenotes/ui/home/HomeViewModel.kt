@@ -41,7 +41,7 @@ class HomeViewModel(
             notesRepository.saveNote(
                 context = getApplication(),
                 note = Note(text = text, list = list),
-                fileName = if (fileName == "newNote") null else fileName
+                fileName = fileName
             )
 
             loadNotes()
