@@ -32,6 +32,7 @@ import `in`.v89bhp.checkablenotes.data.CheckableItem
 @Composable
 fun Note(
     fileName: String,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NoteViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
@@ -73,6 +74,7 @@ fun Note(
 
         BackHandler(true) {
             viewModel.saveNote(fileName)
+            navigateBack()
         }
     }
 }
