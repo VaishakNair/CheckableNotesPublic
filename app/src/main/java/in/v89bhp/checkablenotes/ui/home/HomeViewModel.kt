@@ -36,7 +36,6 @@ class HomeViewModel(
     }
 
     fun saveNote(fileName: String, text: TextFieldValue, list: List<CheckableItem>) {
-        // TODO
         viewModelScope.launch {
             notesRepository.saveNote(
                 context = getApplication(),
