@@ -2,6 +2,7 @@ package `in`.v89bhp.checkablenotes.ui.note
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -138,10 +139,8 @@ fun Note(
             }
         }
         if (viewModel.openDeleteDialog) {
-            ConfirmationDialog(title = stringResource(R.string.delete_note),
-                message = stringResource(
-                    R.string.delete_this_note
-                ),
+            ConfirmationDialog(title = R.string.delete_note,
+                text = R.string.delete_this_note,
                 onConfirmation = { confirmed ->
                     if (confirmed) {
                         homeViewModel.deleteNote(fileName)
@@ -204,16 +203,20 @@ fun ItemCard(
 }
 
 @Composable
-fun ConfirmationDialog(title: String, message: String?, onConfirmation: (Boolean) -> Unit) {
+fun ConfirmationDialog(
+    @StringRes title: Int,
+    @StringRes text: Int,
+    onConfirmation: (Boolean) -> Unit
+) {
     val dialogWidth = 200.dp
     val dialogHeight = 50.dp
 
     AlertDialog(onDismissRequest = { },
         title = {
-            Text(text = stringResource(R.string.delete_note))
+            Text(text = stringResource(title))
         },
         text = {
-            Text(text = stringResource(R.string.delete_this_note))
+            Text(text = stringResource(text))
         },
         confirmButton = {
             TextButton(
