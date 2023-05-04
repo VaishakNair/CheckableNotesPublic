@@ -43,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
+import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.home.HomeViewModel
 
 @Composable
@@ -202,39 +203,3 @@ fun ItemCard(
     }
 }
 
-@Composable
-fun ConfirmationDialog(
-    @StringRes title: Int,
-    @StringRes text: Int,
-    onConfirmation: (Boolean) -> Unit
-) {
-    val dialogWidth = 200.dp
-    val dialogHeight = 50.dp
-
-    AlertDialog(onDismissRequest = { },
-        title = {
-            Text(text = stringResource(title))
-        },
-        text = {
-            Text(text = stringResource(text))
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation(true)
-                }
-            ) {
-                Text(stringResource(R.string.confirm))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation(false)
-                }
-            ) {
-                Text(stringResource(R.string.cancel))
-            }
-        })
-
-}
