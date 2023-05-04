@@ -65,4 +65,10 @@ class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
                 .use { it.write(jsonObjectString.toByteArray()) }
         }
     }
+
+    suspend fun deleteNote(context: Context, fileName: String) {
+        withContext(ioDispatcher) {
+            context.deleteFile(fileName)
+        }
+    }
 }

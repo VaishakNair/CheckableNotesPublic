@@ -5,6 +5,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import `in`.v89bhp.checkablenotes.Graph
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
@@ -37,6 +38,7 @@ class HomeViewModel(
 
     fun saveNote(fileName: String, text: TextFieldValue, list: List<CheckableItem>) {
         viewModelScope.launch {
+
             notesRepository.saveNote(
                 context = getApplication(),
                 note = Note(text = text, list = list),
@@ -45,5 +47,13 @@ class HomeViewModel(
 
             loadNotes()
         }
+    }
+
+    fun deleteNote(fileName: String) {
+        viewModelScope.launch {
+            notesRepository.deleteNote(getApplication(), fileName)
+            loadNotes()
+        }
+
     }
 }

@@ -29,14 +29,15 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     val list = mutableListOf<CheckableItem>().toMutableStateList()
 
+    var note: Note? = null
 
     fun loadNote(fileName: String) {
         viewModelScope.launch {
             try {
-                val note = notesRepository.loadNote(getApplication(), fileName)
-                text = note.text
+                note = notesRepository.loadNote(getApplication(), fileName)
+                text = note!!.text
                 list.removeAll { true }
-                list.addAll(note.list)
+                list.addAll(note!!.list)
             } catch (ex: FileNotFoundException) {
                 Log.i(TAG, ex.message!!)
             }
