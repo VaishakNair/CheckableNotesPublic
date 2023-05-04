@@ -13,13 +13,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Checkbox
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,9 +36,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.ui.home.HomeViewModel
 
@@ -50,61 +60,95 @@ fun Note(
         viewModel.firstTime = false
     }
 
+    Scaffold(topBar = {
+        TopAppBar(
+            title = {
+                Text(stringResource(id = R.string.app_name))
+            },
+            actions = {
+                IconButton(onClick = { viewModel.openDeleteDialog = true }) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = stringResource(R.string.delete_note)
+                    )
+                }
+            })
+    }) { contentPadding ->
 
-    var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
-    val titles = listOf("Note", "Checkable List")
+        var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
+        val titles = listOf("Note", "Checkable List")
 
-    Column(modifier = modifier) {
-        TabRow(selectedTabIndex = selectedTabIndex) {
-            titles.forEachIndexed { index, title ->
-                Tab(
-                    selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index },
-                    text = { Text(text = title, maxLines = 2, overflow = TextOverflow.Ellipsis) }
+        Column(modifier = modifier.padding(contentPadding)) {
+            TabRow(selectedTabIndex = selectedTabIndex) {
+                titles.forEachIndexed { index, title ->
+                    Tab(
+                        selected = selectedTabIndex == index,
+                        onClick = { selectedTabIndex = index },
+                        text = {
+                            Text(
+                                text = title,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    )
+                }
+            }
+            if (selectedTabIndex == 0) { // Tab 1
+                TextField(
+                    value = viewModel.text,
+                    onValueChange = {
+                        viewModel.text = it
+                        viewModel.updateList(it)
+                    },
+                    label = { Text("Enter Items Line by Line:") },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
                 )
+            } else { // Tab 2
+                CheckableList(checkableItems = viewModel.list,
+                    modifier = Modifier.padding(16.dp),
+                    onCheckedChange = { checkableItem, newValue ->
+                        viewModel.onCheckedChange(checkableItem, newValue)
+                    })
+            }
+
+            BackHandler(true) {
+                if (viewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
+                    homeViewModel.deleteNote(fileName)
+                } else {
+                    viewModel.note?.let {// Not a new note:
+                        if (it.text.text != viewModel.text.text) {// Note has been updated:
+                            homeViewModel.saveNote(
+                                fileName,
+                                viewModel.text,
+                                viewModel.list
+                            )
+                        }
+                    } ?: homeViewModel.saveNote(
+                        fileName,
+                        viewModel.text,
+                        viewModel.list
+                    ) // New note. Save it.
+
+                }
+                navigateBack()
             }
         }
-        if (selectedTabIndex == 0) { // Tab 1
-            TextField(
-                value = viewModel.text,
-                onValueChange = {
-                    viewModel.text = it
-                    viewModel.updateList(it)
-                },
-                label = { Text("Enter Items Line by Line:") },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
-            )
-        } else { // Tab 2
-            CheckableList(checkableItems = viewModel.list,
-                modifier = Modifier.padding(16.dp),
-                onCheckedChange = { checkableItem, newValue ->
-                    viewModel.onCheckedChange(checkableItem, newValue)
-                })
-        }
-
-        BackHandler(true) {
-            if (viewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
-                homeViewModel.deleteNote(fileName)
-            } else {
-                viewModel.note?.let {// Not a new note:
-                    if (it.text.text != viewModel.text.text) {// Note has been updated:
-                        homeViewModel.saveNote(
-                            fileName,
-                            viewModel.text,
-                            viewModel.list
-                        )
+        if (viewModel.openDeleteDialog) {
+            ConfirmationDialog(title = stringResource(R.string.delete_note),
+                message = stringResource(
+                    R.string.delete_this_note
+                ),
+                onConfirmation = { confirmed ->
+                    if (confirmed) {
+                        homeViewModel.deleteNote(fileName)
+                        navigateBack()
                     }
-                } ?: homeViewModel.saveNote(
-                    fileName,
-                    viewModel.text,
-                    viewModel.list
-                ) // New note. Save it.
-
-            }
-            navigateBack()
+                    viewModel.openDeleteDialog = false
+                })
         }
     }
 }
@@ -157,4 +201,37 @@ fun ItemCard(
 
         }
     }
+}
+
+@Composable
+fun ConfirmationDialog(title: String, message: String?, onConfirmation: (Boolean) -> Unit) {
+    val dialogWidth = 200.dp
+    val dialogHeight = 50.dp
+
+    AlertDialog(onDismissRequest = { },
+        title = {
+            Text(text = stringResource(R.string.delete_note))
+        },
+        text = {
+            Text(text = stringResource(R.string.delete_this_note))
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation(true)
+                }
+            ) {
+                Text(stringResource(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation(false)
+                }
+            ) {
+                Text(stringResource(R.string.cancel))
+            }
+        })
+
 }

@@ -31,6 +31,9 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     var note: Note? = null
 
+    var openDeleteDialog by mutableStateOf(false)
+
+
     fun loadNote(fileName: String) {
         viewModelScope.launch {
             try {
@@ -43,8 +46,6 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-
-
 
 
     fun updateList(value: TextFieldValue) {
