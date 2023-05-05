@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -17,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
+import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
 
 @Composable
 fun Home(
@@ -43,9 +46,22 @@ fun Home(
             }
         },
         topBar = {
-            TopAppBar(title = {
-                Text(stringResource(id = R.string.app_name))
-            })
+            ContextualTopAppBar(
+                isContextual = viewModel.isContextual,
+                normalTitle = stringResource(id = R.string.app_name),
+                contextualTitle = stringResource(R.string.x_selected).format(1),// TODO
+                normalActions = { },
+                contextualActions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = stringResource(R.string.delete)
+                        )
+                    }
+                },
+                onClose = {/* TODO */ },
+
+                )
         }
     ) { contentPadding ->
         NotesGrid(

@@ -1,6 +1,8 @@
 package `in`.v89bhp.checkablenotes.ui.home
 
 import android.app.Application
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.AndroidViewModel
@@ -19,6 +21,8 @@ class HomeViewModel(
     private val notesRepository: NotesRepository = Graph.notesRepository
     var notesList = mutableListOf<Note>().toMutableStateList()
     var fileNamesList = mutableListOf<String>().toMutableStateList()
+
+    var isContextual by mutableStateOf(false)
 
     init {
         viewModelScope.launch {
