@@ -25,7 +25,8 @@ fun CheckableNotesApp(
             Home(
                 navigateToNote = { fileName ->
                     appState.navigateToNote(fileName, backStackEntry)
-                }
+                },
+                navigateBack = { appState.navigateBack() }
             )
         }
 

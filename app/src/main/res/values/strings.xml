@@ -6,4 +6,5 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="x_selected" formatted="false">%d selected</string>
+    <string name="delete_selected_notes">Delete selected notes?</string>
 </resources>

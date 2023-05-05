@@ -23,6 +23,8 @@ class HomeViewModel(
     var fileNamesList = mutableListOf<String>().toMutableStateList()
 
     var isContextual by mutableStateOf(false)
+    var openDeleteDialog by mutableStateOf(false)
+    var selectedFileNames = mutableListOf<String>().toMutableStateList()
 
     init {
         viewModelScope.launch {
@@ -38,6 +40,8 @@ class HomeViewModel(
 
         notesList.removeAll { true }
         notesList.addAll(notes)
+
+        selectedFileNames.removeAll { true }
     }
 
     fun saveNote(fileName: String, text: TextFieldValue, list: List<CheckableItem>) {
@@ -53,9 +57,9 @@ class HomeViewModel(
         }
     }
 
-    fun deleteNote(fileName: String) {
+    fun deleteNotes(fileNames: List<String>) {
         viewModelScope.launch {
-            notesRepository.deleteNote(getApplication(), fileName)
+            notesRepository.deleteNotes(getApplication(), fileNames)
             loadNotes()
         }
 

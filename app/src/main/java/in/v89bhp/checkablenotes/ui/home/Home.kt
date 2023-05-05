@@ -15,7 +15,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -29,13 +28,15 @@ import androidx.compose.ui.unit.dp
 import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
+import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
 
 @Composable
 fun Home(
     navigateToNote: (String) -> Unit,
+    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity),
+    homeViewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity),
 
     ) {
 
@@ -47,12 +48,12 @@ fun Home(
         },
         topBar = {
             ContextualTopAppBar(
-                isContextual = viewModel.isContextual,
+                isContextual = homeViewModel.isContextual,
                 normalTitle = stringResource(id = R.string.app_name),
                 contextualTitle = stringResource(R.string.x_selected).format(1),// TODO
                 normalActions = { },
                 contextualActions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { homeViewModel.openDeleteDialog = true }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = stringResource(R.string.delete)
@@ -65,11 +66,23 @@ fun Home(
         }
     ) { contentPadding ->
         NotesGrid(
-            fileNames = viewModel.fileNamesList,
-            notes = viewModel.notesList,
+            fileNames = homeViewModel.fileNamesList,
+            notes = homeViewModel.notesList,
             navigateToNote = navigateToNote,
             modifier = modifier.padding(contentPadding)
         )
+
+        if (homeViewModel.openDeleteDialog) {
+            ConfirmationDialog(title = R.string.delete_note,
+                text = R.string.delete_selected_notes,
+                onConfirmation = { confirmed ->
+                    if (confirmed) {
+                        homeViewModel.deleteNotes(homeViewModel.selectedFileNames)
+                        navigateBack()
+                    }
+                    homeViewModel.openDeleteDialog = false
+                })
+        }
     }
 
 
@@ -130,7 +143,7 @@ fun NoteCardPreview() {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun ScaffoldPreview() {
-    Home({}, modifier = Modifier.padding(0.dp))
+    Home(navigateToNote = {}, navigateBack = {}, modifier = Modifier.padding(0.dp))
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)

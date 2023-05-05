@@ -146,7 +146,7 @@ fun Note(
                 text = R.string.delete_this_note,
                 onConfirmation = { confirmed ->
                     if (confirmed) {
-                        homeViewModel.deleteNote(fileName)
+                        homeViewModel.deleteNotes(listOf(fileName))
                         navigateBack()
                     }
                     viewModel.openDeleteDialog = false
@@ -212,7 +212,7 @@ fun onBackPressed(
     navigateBack: () -> Unit
 ) {
     if (viewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
-        homeViewModel.deleteNote(fileName)
+        homeViewModel.deleteNotes(listOf(fileName))
     } else {
         viewModel.loadedNote?.let { loadedNote -> // Not a new note:
             if (loadedNote.text.text != viewModel.text.text || !(loadedNote.list nameischeckedequals viewModel.list)) {// Note has been updated (either text or checkable list):

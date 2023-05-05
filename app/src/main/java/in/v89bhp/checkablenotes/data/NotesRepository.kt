@@ -66,9 +66,11 @@ class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
         }
     }
 
-    suspend fun deleteNote(context: Context, fileName: String) {
+    suspend fun deleteNotes(context: Context, fileNames: List<String>) {
         withContext(ioDispatcher) {
-            context.deleteFile(fileName)
+            fileNames.forEach {fileName ->
+                context.deleteFile(fileName)
+            }
         }
     }
 }
