@@ -29,7 +29,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     val list = mutableListOf<CheckableItem>().toMutableStateList()
 
-    var note: Note? = null
+    var loadedNote: Note? = null
 
     var openDeleteDialog by mutableStateOf(false)
 
@@ -37,10 +37,12 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
     fun loadNote(fileName: String) {
         viewModelScope.launch {
             try {
-                note = notesRepository.loadNote(getApplication(), fileName)
-                text = note!!.text
+                loadedNote = notesRepository.loadNote(getApplication(), fileName)
+                text = loadedNote!!.text
                 list.removeAll { true }
-                list.addAll(note!!.list)
+                list.addAll(loadedNote!!.list.map{
+                    it.copy()
+                })
             } catch (ex: FileNotFoundException) {
                 Log.i(TAG, ex.message!!)
             }
@@ -57,9 +59,9 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         Log.i(TAG, "NewList:")
-        Log.i(TAG, newList.joinToString() { "Id: ${it.id} Message: ${it.message}" })
+        Log.i(TAG, newList.joinToString() { "Id: ${it.id} Message: ${it.name}" })
         Log.i(TAG, "List")
-        Log.i(TAG, list.joinToString() { "Id: ${it.id} Message: ${it.message}" })
+        Log.i(TAG, list.joinToString() { "Id: ${it.id} Message: ${it.name}" })
 
 
         var maxId: Int = if (list.isEmpty()) 0 else list.maxOf { it.id }
@@ -77,7 +79,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
                 setDifference(list.toSet(), newList.toSet()).forEach { deletedItem ->
                     Log.i(
                         TAG,
-                        "Removing item with Id: ${deletedItem.id} and message: ${deletedItem.message}"
+                        "Removing item with Id: ${deletedItem.id} and message: ${deletedItem.name}"
                     )
                     list.removeAll { it == deletedItem }
                 }
@@ -100,7 +102,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
                 setDifference(newList.toSet(), list.toSet()).forEach { newItem ->
                     Log.i(
                         TAG,
-                        "Adding new item with Id: ${newItem.id} and message>>${newItem.message}<<"
+                        "Adding new item with Id: ${newItem.id} and message>>${newItem.name}<<"
                     )
                     newItem.id = ++maxId
                     // Add newly added item to the end of the list if it currently

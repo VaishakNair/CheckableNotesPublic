@@ -40,7 +40,7 @@ class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
                         list = serializableNote.list.map { serializableCheckableItem ->
                             CheckableItem(
                                 id = serializableCheckableItem.id,
-                                message = serializableCheckableItem.message,
+                                name = serializableCheckableItem.name,
                                 isChecked = serializableCheckableItem.isChecked
                             )
                         })
@@ -54,7 +54,7 @@ class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
             list = note.list.map { checkableItem ->
                 SerializableCheckableItem(
                     id = checkableItem.id,
-                    message = checkableItem.message,
+                    name = checkableItem.name,
                     isChecked = checkableItem.isChecked
                 )
             })

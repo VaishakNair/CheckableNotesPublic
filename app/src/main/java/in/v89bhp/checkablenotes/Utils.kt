@@ -35,14 +35,14 @@ import `in`.v89bhp.checkablenotes.data.CheckableItem
  */
 fun setDifference(set1: Set<CheckableItem>, set2: Set<CheckableItem>): Set<CheckableItem> {
     val differenceSet = mutableSetOf<CheckableItem>()
-    set1.forEach { set2Item ->
+    set1.forEach { set1Item ->
         var found = false
-        set2.forEach { set1Item ->
-            if (set2Item == set1Item) {
+        set2.forEach { set2Item ->
+            if (set1Item == set2Item) {
                 found = true
             }
         }
-        if (!found) differenceSet.add(set2Item)
+        if (!found) differenceSet.add(set1Item)
     }
     return differenceSet
 }

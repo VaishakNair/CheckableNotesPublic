@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
+import `in`.v89bhp.checkablenotes.data.nameischeckedequals
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.home.HomeViewModel
 
@@ -59,6 +60,7 @@ fun Note(
         viewModel.loadNote(fileName)
         viewModel.firstTime = false
     }
+
 
     Scaffold(topBar = {
         TopAppBar(
@@ -195,7 +197,7 @@ fun ItemCard(
             )
             Spacer(Modifier.width(10.dp))
             Text(
-                checkableItem.message,
+                checkableItem.name,
                 style = MaterialTheme.typography.body1
             )
 
@@ -212,8 +214,8 @@ fun onBackPressed(
     if (viewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
         homeViewModel.deleteNote(fileName)
     } else {
-        viewModel.note?.let {// Not a new note:
-            if (it.text.text != viewModel.text.text) {// Note has been updated:
+        viewModel.loadedNote?.let { loadedNote -> // Not a new note:
+            if (loadedNote.text.text != viewModel.text.text || !(loadedNote.list nameischeckedequals viewModel.list)) {// Note has been updated (either text or checkable list):
                 homeViewModel.saveNote(
                     fileName,
                     viewModel.text,
