@@ -2,7 +2,6 @@ package `in`.v89bhp.checkablenotes.ui.note
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -24,10 +22,10 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -74,6 +72,21 @@ fun Note(
                         contentDescription = stringResource(R.string.delete_note)
                     )
                 }
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    onBackPressed(
+                        fileName,
+                        viewModel,
+                        homeViewModel,
+                        navigateBack
+                    )
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
             })
     }) { contentPadding ->
 
@@ -118,25 +131,12 @@ fun Note(
             }
 
             BackHandler(true) {
-                if (viewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
-                    homeViewModel.deleteNote(fileName)
-                } else {
-                    viewModel.note?.let {// Not a new note:
-                        if (it.text.text != viewModel.text.text) {// Note has been updated:
-                            homeViewModel.saveNote(
-                                fileName,
-                                viewModel.text,
-                                viewModel.list
-                            )
-                        }
-                    } ?: homeViewModel.saveNote(
-                        fileName,
-                        viewModel.text,
-                        viewModel.list
-                    ) // New note. Save it.
-
-                }
-                navigateBack()
+                onBackPressed(
+                    fileName,
+                    viewModel,
+                    homeViewModel,
+                    navigateBack
+                )
             }
         }
         if (viewModel.openDeleteDialog) {
@@ -201,5 +201,32 @@ fun ItemCard(
 
         }
     }
+}
+
+fun onBackPressed(
+    fileName: String,
+    viewModel: NoteViewModel,
+    homeViewModel: HomeViewModel,
+    navigateBack: () -> Unit
+) {
+    if (viewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
+        homeViewModel.deleteNote(fileName)
+    } else {
+        viewModel.note?.let {// Not a new note:
+            if (it.text.text != viewModel.text.text) {// Note has been updated:
+                homeViewModel.saveNote(
+                    fileName,
+                    viewModel.text,
+                    viewModel.list
+                )
+            }
+        } ?: homeViewModel.saveNote(
+            fileName,
+            viewModel.text,
+            viewModel.list
+        ) // New note. Save it.
+
+    }
+    navigateBack()
 }
 
