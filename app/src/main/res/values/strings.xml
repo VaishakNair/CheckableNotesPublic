@@ -3,6 +3,7 @@
     <string name="delete_note">Delete note</string>
     <string name="delete_this_note">Delete this note?</string>
     <string name="delete">Delete</string>
-    <string name= "confirm">Confirm</string>
-    <string name= "cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="x_selected" formatted="false">%d selected</string>
 </resources>
