@@ -22,7 +22,6 @@ class HomeViewModel(
     var notesList = mutableListOf<Note>().toMutableStateList()
     var fileNamesList = mutableListOf<String>().toMutableStateList()
 
-    var isContextual by mutableStateOf(false)
     var openDeleteDialog by mutableStateOf(false)
     var selectedFileNames = mutableListOf<String>().toMutableStateList()
 

@@ -1,7 +1,7 @@
 package `in`.v89bhp.checkablenotes.ui.home
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -34,10 +35,10 @@ import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
 @Composable
 fun Home(
     navigateToNote: (String) -> Unit,
-    navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(viewModelStoreOwner = LocalContext.current as ComponentActivity),
-
+    homeViewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
+        viewModelStoreOwner = LocalContext.current as ComponentActivity
+    ),
     ) {
 
     Scaffold(
@@ -48,9 +49,9 @@ fun Home(
         },
         topBar = {
             ContextualTopAppBar(
-                isContextual = homeViewModel.isContextual,
+                isContextual = homeViewModel.selectedFileNames.isNotEmpty(),
                 normalTitle = stringResource(id = R.string.app_name),
-                contextualTitle = stringResource(R.string.x_selected).format(1),// TODO
+                contextualTitle = stringResource(R.string.x_selected).format(homeViewModel.selectedFileNames.size),// TODO
                 normalActions = { },
                 contextualActions = {
                     IconButton(onClick = { homeViewModel.openDeleteDialog = true }) {
@@ -60,15 +61,16 @@ fun Home(
                         )
                     }
                 },
-                onClose = {/* TODO */ },
-
+                onClose = { homeViewModel.selectedFileNames.clear() },
                 )
         }
     ) { contentPadding ->
         NotesGrid(
             fileNames = homeViewModel.fileNamesList,
+            selectedFileNames = homeViewModel.selectedFileNames,
             notes = homeViewModel.notesList,
             navigateToNote = navigateToNote,
+            onLongPress = { fileName -> homeViewModel.selectedFileNames.add(fileName) },
             modifier = modifier.padding(contentPadding)
         )
 
@@ -78,7 +80,7 @@ fun Home(
                 onConfirmation = { confirmed ->
                     if (confirmed) {
                         homeViewModel.deleteNotes(homeViewModel.selectedFileNames)
-                        navigateBack()
+                        homeViewModel.selectedFileNames.clear()
                     }
                     homeViewModel.openDeleteDialog = false
                 })
@@ -91,8 +93,10 @@ fun Home(
 @Composable
 fun NotesGrid(
     fileNames: List<String>,
+    selectedFileNames: MutableList<String>,
     notes: List<Note>,
     navigateToNote: (String) -> Unit,
+    onLongPress: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
@@ -103,7 +107,16 @@ fun NotesGrid(
     ) {
         itemsIndexed(notes) { index, note ->
             NoteCard(note = note.text.text,
-                onClick = { navigateToNote(fileNames[index]) })
+                onClick = {
+                    if (fileNames[index] in selectedFileNames) {// The card has been selected by a long press. De-select it
+                        selectedFileNames.remove(fileNames[index])
+                    } else if (selectedFileNames.isNotEmpty()) {
+                        selectedFileNames.add(fileNames[index])
+                    } else {// Navigate to the note represented by the card:
+                        navigateToNote(fileNames[index])
+                    }
+                },
+                onLongPress = { onLongPress(fileNames[index]) })
         }
     }
 }
@@ -112,6 +125,7 @@ fun NotesGrid(
 fun NoteCard(
     note: String,
     onClick: () -> Unit,
+    onLongPress: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -119,7 +133,13 @@ fun NoteCard(
         shape = MaterialTheme.shapes.medium,
         modifier = modifier
             .size(width = 100.dp, height = 100.dp)
-            .clickable { onClick() }
+//            .clickable { onClick() } // TODO
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = { onLongPress() },
+                    onTap = { onClick() }
+                )
+            }
     ) {
         Text(
             text = note,
@@ -136,6 +156,7 @@ fun NoteCardPreview() {
     NoteCard(
         note = "Tomato\nPotato\nDates",
         onClick = {},
+        onLongPress = {},
         modifier = Modifier.padding(8.dp)
     )
 }
@@ -143,7 +164,7 @@ fun NoteCardPreview() {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun ScaffoldPreview() {
-    Home(navigateToNote = {}, navigateBack = {}, modifier = Modifier.padding(0.dp))
+    Home(navigateToNote = {}, modifier = Modifier.padding(0.dp))
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
@@ -165,5 +186,10 @@ fun NotesGridPreview() {
             )
         )
     )
-    NotesGrid(fileNames = listOf("3", "2", "1"), notes = notes, navigateToNote = {})
+    NotesGrid(
+        fileNames = listOf("3", "2", "1"),
+        selectedFileNames = mutableListOf<String>(),
+        notes = notes,
+        navigateToNote = {},
+        onLongPress = {})
 }
