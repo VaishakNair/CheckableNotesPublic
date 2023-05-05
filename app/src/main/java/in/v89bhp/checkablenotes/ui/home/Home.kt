@@ -39,7 +39,7 @@ fun Home(
     homeViewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
         viewModelStoreOwner = LocalContext.current as ComponentActivity
     ),
-    ) {
+) {
 
     Scaffold(
         floatingActionButton = {
@@ -62,7 +62,7 @@ fun Home(
                     }
                 },
                 onClose = { homeViewModel.selectedFileNames.clear() },
-                )
+            )
         }
     ) { contentPadding ->
         NotesGrid(
@@ -80,7 +80,6 @@ fun Home(
                 onConfirmation = { confirmed ->
                     if (confirmed) {
                         homeViewModel.deleteNotes(homeViewModel.selectedFileNames)
-                        homeViewModel.selectedFileNames.clear()
                     }
                     homeViewModel.openDeleteDialog = false
                 })

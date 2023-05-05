@@ -59,6 +59,7 @@ class HomeViewModel(
     fun deleteNotes(fileNames: List<String>) {
         viewModelScope.launch {
             notesRepository.deleteNotes(getApplication(), fileNames)
+            selectedFileNames.clear()
             loadNotes()
         }
 
