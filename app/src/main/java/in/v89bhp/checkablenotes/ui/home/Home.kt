@@ -3,6 +3,7 @@ package `in`.v89bhp.checkablenotes.ui.home
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -18,7 +19,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -114,7 +117,8 @@ fun NotesGrid(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         itemsIndexed(notes) { index, note ->
-            NoteCard(note = note.text.text,
+            NoteCard(
+                note = note.text.text,
                 onClick = {
                     if (fileNames[index] in selectedFileNames) {// The card has been selected by a long press. De-select it
                         selectedFileNames.remove(fileNames[index])
@@ -125,7 +129,8 @@ fun NotesGrid(
                     }
                 },
                 onLongPress = { onLongPress(fileNames[index]) },
-            isSelected = fileNames[index] in selectedFileNames)
+                isSelected = fileNames[index] in selectedFileNames
+            )
         }
     }
 }
@@ -150,11 +155,24 @@ fun NoteCard(
                 )
             }
     ) {
-        Text(
-            text = note,
+        Row(
             modifier = Modifier.padding(8.dp),
-            maxLines = 4
-        )
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = note,
+                maxLines = 4,
+                modifier = Modifier.weight(0.75f)
+            )
+            if (isSelected) {
+                Icon(
+                    imageVector = Icons.Outlined.CheckCircle,
+                    contentDescription = null,
+                    modifier = Modifier.weight(0.25f)
+                )
+            }
+        }
+
     }
 
 }
@@ -163,9 +181,10 @@ fun NoteCard(
 @Composable
 fun NoteCardPreview() {
     NoteCard(
-        note = "Tomato\nPotato\nDates",
+        note = "Tomatodfdfdfdfdf\nPotato\nDates",
         onClick = {},
         onLongPress = {},
+        isSelected = true,
         modifier = Modifier.padding(8.dp)
     )
 }
