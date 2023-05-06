@@ -124,7 +124,8 @@ fun NotesGrid(
                         navigateToNote(fileNames[index])
                     }
                 },
-                onLongPress = { onLongPress(fileNames[index]) })
+                onLongPress = { onLongPress(fileNames[index]) },
+            isSelected = fileNames[index] in selectedFileNames)
         }
     }
 }
@@ -134,6 +135,7 @@ fun NoteCard(
     note: String,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
+    isSelected: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -141,7 +143,6 @@ fun NoteCard(
         shape = MaterialTheme.shapes.medium,
         modifier = modifier
             .size(width = 100.dp, height = 100.dp)
-//            .clickable { onClick() } // TODO
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = { onLongPress() },
