@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,14 +73,14 @@ fun Home(
                     }
 
                     IconButton(onClick = {
-                        if (homeViewModel.selectedFileNames.size == homeViewModel.fileNamesList.size) { // All items have been selected. De-select them:
-                            homeViewModel.selectedFileNames.clear()
+                        if (homeViewModel.allSelected) { // All items have been selected. De-select them:
+                            homeViewModel.deselectAll()
                         } else {
                             homeViewModel.selectAll()
                         }
                     }) {
                         Icon(
-                            imageVector = Icons.Filled.List,
+                            painter = painterResource(id = if (homeViewModel.allSelected) R.drawable.baseline_deselect_24 else R.drawable.baseline_select_all_24),
                             contentDescription = stringResource(R.string.select_all)
                         )
                     }

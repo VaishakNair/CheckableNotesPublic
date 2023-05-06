@@ -72,4 +72,9 @@ class HomeViewModel(
         selectedFileNames.addAll(fileNamesList)
     }
 
+    fun deselectAll() {
+        selectedFileNames.clear()
+    }
+    val allSelected: Boolean
+        get() = selectedFileNames.size == fileNamesList.size
 }
