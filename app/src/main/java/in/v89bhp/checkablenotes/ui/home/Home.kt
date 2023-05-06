@@ -75,7 +75,11 @@ fun Home(
             selectedFileNames = homeViewModel.selectedFileNames,
             notes = homeViewModel.notesList,
             navigateToNote = navigateToNote,
-            onLongPress = { fileName -> homeViewModel.selectedFileNames.add(fileName) },
+            onLongPress = { fileName ->
+                if (fileName !in homeViewModel.selectedFileNames) { // Ignore subsequent long-presses from the same item.
+                    homeViewModel.selectedFileNames.add(fileName)
+                }
+            },
             modifier = modifier.padding(contentPadding)
         )
 
