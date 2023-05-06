@@ -19,6 +19,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -67,6 +68,19 @@ fun Home(
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = stringResource(R.string.delete)
+                        )
+                    }
+
+                    IconButton(onClick = {
+                        if (homeViewModel.selectedFileNames.size == homeViewModel.fileNamesList.size) { // All items have been selected. De-select them:
+                            homeViewModel.selectedFileNames.clear()
+                        } else {
+                            homeViewModel.selectAll()
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.List,
+                            contentDescription = stringResource(R.string.select_all)
                         )
                     }
                 },
@@ -164,7 +178,9 @@ fun NoteCard(
             Text(
                 text = note,
                 maxLines = 4,
-                modifier = Modifier.weight(0.75f).align(Alignment.Top)
+                modifier = Modifier
+                    .weight(0.75f)
+                    .align(Alignment.Top)
             )
             if (isSelected) {
                 Icon(

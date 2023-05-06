@@ -65,6 +65,11 @@ class HomeViewModel(
             selectedFileNames.clear()
             loadNotes()
         }
-
     }
+
+    fun selectAll() {
+        selectedFileNames.clear()
+        selectedFileNames.addAll(fileNamesList)
+    }
+
 }
