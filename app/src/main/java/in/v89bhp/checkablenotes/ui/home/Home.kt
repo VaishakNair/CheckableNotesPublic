@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -153,7 +154,8 @@ fun NoteCard(
                     onLongPress = { onLongPress() },
                     onTap = { onClick() }
                 )
-            }
+            },
+        color = if (isSelected) Color.LightGray else Color.White
     ) {
         Row(
             modifier = Modifier.padding(8.dp),
@@ -162,7 +164,7 @@ fun NoteCard(
             Text(
                 text = note,
                 maxLines = 4,
-                modifier = Modifier.weight(0.75f)
+                modifier = Modifier.weight(0.75f).align(Alignment.Top)
             )
             if (isSelected) {
                 Icon(
