@@ -56,7 +56,7 @@ fun Note(
     )
 ) {
 
-    if (viewModel.firstTime) {
+    if (viewModel.firstTime) { // View model has been loaded for the first time. Load note (if any)
         viewModel.loadNote(fileName)
         viewModel.firstTime = false
     }

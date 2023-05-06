@@ -19,13 +19,16 @@ class HomeViewModel(
 ) : AndroidViewModel(application) {
     private val TAG = "HomeViewModel"
     private val notesRepository: NotesRepository = Graph.notesRepository
+
+    var firstTime = true
+
     var notesList = mutableListOf<Note>().toMutableStateList()
     var fileNamesList = mutableListOf<String>().toMutableStateList()
 
     var openDeleteDialog by mutableStateOf(false)
     var selectedFileNames = mutableListOf<String>().toMutableStateList()
 
-    init {
+    fun loadNotesInitial() {
         viewModelScope.launch {
             loadNotes()
         }
@@ -34,13 +37,13 @@ class HomeViewModel(
 
     private suspend fun loadNotes() {
         val (fileNames, notes) = notesRepository.loadNotes(getApplication())
-        fileNamesList.removeAll { true }
+        fileNamesList.clear()
         fileNamesList.addAll(fileNames)
 
-        notesList.removeAll { true }
+        notesList.clear()
         notesList.addAll(notes)
 
-        selectedFileNames.removeAll { true }
+        selectedFileNames.clear()
     }
 
     fun saveNote(fileName: String, text: TextFieldValue, list: List<CheckableItem>) {

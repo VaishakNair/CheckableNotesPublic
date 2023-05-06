@@ -39,7 +39,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 loadedNote = notesRepository.loadNote(getApplication(), fileName)
                 text = loadedNote!!.text
-                list.removeAll { true }
+                list.clear()
                 list.addAll(loadedNote!!.list.map{
                     it.copy()
                 })
@@ -74,7 +74,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
         if (!list.isEmpty()) {
             if (newList.isEmpty()) {
-                list.removeAll { true }
+                list.clear()
             } else {
                 setDifference(list.toSet(), newList.toSet()).forEach { deletedItem ->
                     Log.i(

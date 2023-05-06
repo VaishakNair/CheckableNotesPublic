@@ -41,6 +41,11 @@ fun Home(
     ),
 ) {
 
+    if (homeViewModel.firstTime) { // View model has been loaded for the first time. Load notes (if any)
+        homeViewModel.loadNotesInitial()
+        homeViewModel.firstTime = false
+    }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { navigateToNote("${System.currentTimeMillis()}.json") }) {
