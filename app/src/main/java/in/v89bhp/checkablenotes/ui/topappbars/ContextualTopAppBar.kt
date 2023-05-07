@@ -2,21 +2,23 @@ package `in`.v89bhp.checkablenotes.ui.topappbars
 
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import `in`.v89bhp.checkablenotes.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContextualTopAppBar(
     isContextual: Boolean,
@@ -39,15 +41,18 @@ fun ContextualTopAppBar(
                     )
                 }
             }
-        } else null,
+        } else {
+            {}
+        },
         actions = if (isContextual) {
             { contextualActions() }
         } else {
-            {normalActions()}
+            { normalActions() }
         }
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun TopAppBarPreview() {
