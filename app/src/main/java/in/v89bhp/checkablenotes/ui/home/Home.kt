@@ -1,12 +1,10 @@
 package `in`.v89bhp.checkablenotes.ui.home
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -17,18 +15,17 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -61,7 +58,10 @@ fun Home(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { navigateToNote("${System.currentTimeMillis()}.json") }) {
+            LargeFloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer, // This is not needed and is automatically set to this value by the system.
+                onClick = { navigateToNote("${System.currentTimeMillis()}.json") }) {
                 Icon(Icons.Filled.Add, "New note")
             }
         },
@@ -168,7 +168,7 @@ fun NoteCard(
 ) {
 
     Card(
-        modifier =  modifier
+        modifier = modifier
             .size(width = 100.dp, height = 100.dp)
             .semantics { selected = isSelected }
             .pointerInput(Unit) {
@@ -176,11 +176,15 @@ fun NoteCard(
                     onLongPress = { onLongPress() },
                     onTap = { onClick() }
                 )
-            }
+            },
+        colors = CardDefaults.cardColors(containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else
+            MaterialTheme.colorScheme.surfaceVariant)
     )
- {
+    {
         Row(
-            modifier = Modifier.padding(8.dp).fillMaxSize(),
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
