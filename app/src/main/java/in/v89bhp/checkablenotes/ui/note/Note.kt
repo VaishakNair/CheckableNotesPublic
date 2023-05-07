@@ -16,13 +16,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -184,9 +184,9 @@ fun ItemCard(
     modifier: Modifier = Modifier
 
 ) {
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.small
+    Card(
+        modifier = modifier.fillMaxWidth()
+
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -200,7 +200,7 @@ fun ItemCard(
             Spacer(Modifier.width(10.dp))
             Text(
                 checkableItem.name,
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodyLarge
             )
 
         }
