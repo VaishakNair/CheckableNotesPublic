@@ -1,9 +1,12 @@
 package `in`.v89bhp.checkablenotes.ui.home
 
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -13,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,6 +33,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -161,20 +167,20 @@ fun NoteCard(
     modifier: Modifier = Modifier
 ) {
 
-    Surface(
-        shape = MaterialTheme.shapes.medium,
-        modifier = modifier
+    Card(
+        modifier =  modifier
             .size(width = 100.dp, height = 100.dp)
+            .semantics { selected = isSelected }
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = { onLongPress() },
                     onTap = { onClick() }
                 )
-            },
-        color = if (isSelected) Color.LightGray else Color.White
-    ) {
+            }
+    )
+ {
         Row(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(8.dp).fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
