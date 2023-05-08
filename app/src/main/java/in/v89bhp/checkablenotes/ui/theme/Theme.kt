@@ -81,7 +81,7 @@ fun CheckableNotesTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
+    val colorScheme = if (darkTheme) {
         DarkColors
     } else {
         LightColors
@@ -91,7 +91,7 @@ fun CheckableNotesTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colors.primary.toArgb()
+            window.statusBarColor = colorScheme.primary.toArgb()
             WindowCompat
                 .getInsetsController(window, view)
                 .isAppearanceLightStatusBars = darkTheme
@@ -99,7 +99,8 @@ fun CheckableNotesTheme(
     }
 
     MaterialTheme(
-        colorScheme = colors,
-        content = content
+        colorScheme = colorScheme,
+        content = content,
+//        typography = typography
     )
 }
