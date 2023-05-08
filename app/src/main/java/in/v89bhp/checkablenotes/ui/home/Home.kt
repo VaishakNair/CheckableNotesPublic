@@ -18,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.VectorPainter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -57,13 +60,17 @@ fun Home(
     }
 
     Scaffold(
-        floatingActionButton = {
-            LargeFloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                contentColor = MaterialTheme.colorScheme.onTertiaryContainer, // This is not needed and is automatically set to this value by the system.
-                onClick = { navigateToNote("${System.currentTimeMillis()}.json") }) {
-                Icon(Icons.Filled.Add, "New note")
+        floatingActionButton = if (homeViewModel.selectedFileNames.isEmpty()) {
+            {
+                LargeFloatingActionButton(
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer, // This is not needed and is automatically set to this value by the system.
+                    onClick = { navigateToNote("${System.currentTimeMillis()}.json") }) {
+                    Icon(Icons.Filled.Add, "New note")
+                }
             }
+        } else {
+            {}
         },
         topBar = {
             ContextualTopAppBar(
@@ -152,7 +159,8 @@ fun NotesGrid(
                     }
                 },
                 onLongPress = { onLongPress(fileNames[index]) },
-                isSelected = fileNames[index] in selectedFileNames
+                isSelected = fileNames[index] in selectedFileNames,
+                isCABActivated = selectedFileNames.isNotEmpty()
             )
         }
     }
@@ -164,6 +172,7 @@ fun NoteCard(
     onClick: () -> Unit,
     onLongPress: () -> Unit,
     isSelected: Boolean,
+    isCABActivated: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -177,8 +186,10 @@ fun NoteCard(
                     onTap = { onClick() }
                 )
             },
-        colors = CardDefaults.cardColors(containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else
-            MaterialTheme.colorScheme.surfaceVariant)
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else
+                MaterialTheme.colorScheme.surfaceVariant
+        )
     )
     {
         Row(
@@ -194,9 +205,11 @@ fun NoteCard(
                     .weight(0.75f)
                     .align(Alignment.Top)
             )
-            if (isSelected) {
+            if (isSelected || isCABActivated) {
                 Icon(
-                    imageVector = Icons.Outlined.CheckCircle,
+                    painter = if (isSelected) rememberVectorPainter(Icons.Outlined.CheckCircle) else painterResource(
+                        id = R.drawable.outline_circle_24
+                    ),
                     contentDescription = null,
                     modifier = Modifier.weight(0.25f)
                 )
@@ -215,6 +228,7 @@ fun NoteCardPreview() {
         onClick = {},
         onLongPress = {},
         isSelected = true,
+        isCABActivated = false,
         modifier = Modifier.padding(8.dp)
     )
 }
