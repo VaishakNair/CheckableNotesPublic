@@ -107,7 +107,8 @@ fun Note(
                             Text(
                                 text = title,
                                 maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
+                                overflow = TextOverflow.Ellipsis,
+                                style = MaterialTheme.typography.bodyLarge
                             )
                         }
                     )
