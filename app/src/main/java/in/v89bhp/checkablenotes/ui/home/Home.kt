@@ -36,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.v89bhp.checkablenotes.R
@@ -201,6 +202,7 @@ fun NoteCard(
             Text(
                 text = note,
                 maxLines = 4,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .weight(0.75f)
                     .align(Alignment.Top)
