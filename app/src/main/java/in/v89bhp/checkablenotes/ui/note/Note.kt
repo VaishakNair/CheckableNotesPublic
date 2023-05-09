@@ -56,15 +56,15 @@ fun Note(
     fileName: String,
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: NoteViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    noteViewModel: NoteViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     homeViewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
         viewModelStoreOwner = LocalContext.current as ComponentActivity
     )
 ) {
 
-    if (viewModel.firstTime) { // View model has been loaded for the first time. Load note (if any)
-        viewModel.loadNote(fileName)
-        viewModel.firstTime = false
+    if (noteViewModel.firstTime) { // View model has been loaded for the first time. Load note (if any)
+        noteViewModel.loadNote(fileName)
+        noteViewModel.firstTime = false
     }
 
 
@@ -74,7 +74,7 @@ fun Note(
                 Text(stringResource(id = R.string.app_name))
             },
             actions = {
-                IconButton(onClick = { viewModel.openDeleteDialog = true }) {
+                IconButton(onClick = { noteViewModel.openDeleteDialog = true }) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
                         contentDescription = stringResource(R.string.delete_note)
@@ -85,7 +85,7 @@ fun Note(
                 IconButton(onClick = {
                     onBackPressed(
                         fileName,
-                        viewModel,
+                        noteViewModel,
                         homeViewModel,
                         navigateBack
                     )
@@ -111,14 +111,14 @@ fun Note(
 
                             BadgedBox(
                                 badge = {
-                                    if (index == 1 && viewModel.pendingItemsCount > 0) {
+                                    if (index == 1 && noteViewModel.pendingItemsCount > 0) {
                                         Badge {
 
                                             Text(
-                                                viewModel.pendingItemsCount.toString(),
+                                                noteViewModel.pendingItemsCount.toString(),
                                                 modifier = Modifier.semantics {
                                                     contentDescription =
-                                                        "${viewModel.pendingItemsCount} pending items"
+                                                        "${noteViewModel.pendingItemsCount} pending items"
                                                 }
                                             )
                                         }
@@ -139,10 +139,10 @@ fun Note(
             }
             if (selectedTabIndex == 0) { // Tab 1
                 TextField(
-                    value = viewModel.text,
+                    value = noteViewModel.text,
                     onValueChange = {
-                        viewModel.text = it
-                        viewModel.updateList(it)
+                        noteViewModel.text = it
+                        noteViewModel.updateList(it)
                     },
                     label = { Text("Enter Items Line by Line:") },
                     modifier = Modifier
@@ -151,23 +151,23 @@ fun Note(
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
                 )
             } else { // Tab 2
-                CheckableList(checkableItems = viewModel.list,
+                CheckableList(checkableItems = noteViewModel.list,
                     modifier = Modifier.padding(16.dp),
                     onCheckedChange = { checkableItem, newValue ->
-                        viewModel.onCheckedChange(checkableItem, newValue)
+                        noteViewModel.onCheckedChange(checkableItem, newValue)
                     })
             }
 
             BackHandler(true) {
                 onBackPressed(
                     fileName,
-                    viewModel,
+                    noteViewModel,
                     homeViewModel,
                     navigateBack
                 )
             }
         }
-        if (viewModel.openDeleteDialog) {
+        if (noteViewModel.openDeleteDialog) {
             ConfirmationDialog(title = R.string.delete_note,
                 text = R.string.delete_this_note,
                 onConfirmation = { confirmed ->
@@ -175,7 +175,7 @@ fun Note(
                         homeViewModel.deleteNotes(listOf(fileName))
                         navigateBack()
                     }
-                    viewModel.openDeleteDialog = false
+                    noteViewModel.openDeleteDialog = false
                 })
         }
     }
