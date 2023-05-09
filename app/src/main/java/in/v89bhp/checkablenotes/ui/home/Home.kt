@@ -3,6 +3,7 @@ package `in`.v89bhp.checkablenotes.ui.home
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,11 +15,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material3.Badge
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
@@ -27,12 +28,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.VectorPainter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
@@ -167,6 +168,7 @@ fun NotesGrid(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteCard(
     note: String,
@@ -193,31 +195,42 @@ fun NoteCard(
         )
     )
     {
-        Row(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = note,
-                maxLines = 4,
-                overflow = TextOverflow.Ellipsis,
+        Box() {
+            Row(
                 modifier = Modifier
-                    .weight(0.75f)
-                    .align(Alignment.Top)
-            )
-            if (isSelected || isCABActivated) {
-                Icon(
-                    painter = if (isSelected) rememberVectorPainter(Icons.Outlined.CheckCircle) else painterResource(
-                        id = R.drawable.outline_circle_24
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier.weight(0.25f)
+                    .padding(8.dp)
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = note,
+                    maxLines = 4,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .weight(0.75f)
+                        .align(Alignment.Top)
+                )
+                if (isSelected || isCABActivated) {
+                    Icon(
+                        painter = if (isSelected) rememberVectorPainter(Icons.Outlined.CheckCircle) else painterResource(
+                            id = R.drawable.outline_circle_24
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier.weight(0.25f)
+                    )
+                }
+            }
+            Badge(modifier = Modifier.padding(5.dp).align(Alignment.TopEnd)) {
+                Text(
+                    "33",
+                    modifier = Modifier
+                        .semantics {
+                            contentDescription =
+                                "33 pending items"
+                        }
                 )
             }
         }
-
     }
 
 }
