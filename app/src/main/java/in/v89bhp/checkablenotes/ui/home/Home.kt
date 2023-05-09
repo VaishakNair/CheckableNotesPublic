@@ -1,5 +1,6 @@
 package `in`.v89bhp.checkablenotes.ui.home
 
+import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -136,6 +137,7 @@ fun Home(
 
 }
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun NotesGrid(
     fileNames: List<String>,
@@ -167,7 +169,7 @@ fun NotesGrid(
                 isSelected = fileNames[index] in selectedFileNames,
                 isCABActivated = selectedFileNames.isNotEmpty(),
                 pendingItemsCount = note.list.sumOf { if (!it.isChecked) 1 as Int else 0 },
-                lastModified = SimpleDateFormat("d MMM yyyy h:mm a").format(
+                lastModified = SimpleDateFormat("d MMM yyyy, h:mm a").format(
                     File(
                         LocalContext.current.filesDir,
                         fileNames[index]
