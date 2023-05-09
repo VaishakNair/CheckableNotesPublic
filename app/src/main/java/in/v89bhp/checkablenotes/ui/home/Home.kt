@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -162,7 +163,8 @@ fun NotesGrid(
                 },
                 onLongPress = { onLongPress(fileNames[index]) },
                 isSelected = fileNames[index] in selectedFileNames,
-                isCABActivated = selectedFileNames.isNotEmpty()
+                isCABActivated = selectedFileNames.isNotEmpty(),
+                pendingItemsCount = note.list.sumOf { if (!it.isChecked) 1 as Int else 0 }
             )
         }
     }
@@ -176,6 +178,7 @@ fun NoteCard(
     onLongPress: () -> Unit,
     isSelected: Boolean,
     isCABActivated: Boolean,
+    pendingItemsCount: Int,
     modifier: Modifier = Modifier
 ) {
 
@@ -190,8 +193,9 @@ fun NoteCard(
                 )
             },
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else
-                MaterialTheme.colorScheme.surfaceVariant
+            containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer
+            else if (pendingItemsCount == 0) MaterialTheme.colorScheme.tertiaryContainer
+            else MaterialTheme.colorScheme.surfaceVariant
         )
     )
     {
@@ -220,15 +224,21 @@ fun NoteCard(
                     )
                 }
             }
-            Badge(modifier = Modifier.padding(5.dp).align(Alignment.TopEnd)) {
-                Text(
-                    "33",
+            if (pendingItemsCount > 0) {
+                Badge(
                     modifier = Modifier
-                        .semantics {
-                            contentDescription =
-                                "33 pending items"
-                        }
-                )
+                        .padding(5.dp)
+                        .align(Alignment.TopEnd)
+                ) {
+                    Text(
+                        pendingItemsCount.toString(),
+                        modifier = Modifier
+                            .semantics {
+                                contentDescription =
+                                    "$pendingItemsCount pending items"
+                            }
+                    )
+                }
             }
         }
     }
@@ -244,6 +254,7 @@ fun NoteCardPreview() {
         onLongPress = {},
         isSelected = true,
         isCABActivated = false,
+        pendingItemsCount = 3,
         modifier = Modifier.padding(8.dp)
     )
 }

@@ -2,12 +2,12 @@ package `in`.v89bhp.checkablenotes.ui.home
 
 import android.app.Application
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.*
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import `in`.v89bhp.checkablenotes.Graph
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
@@ -75,6 +75,7 @@ class HomeViewModel(
     fun deselectAll() {
         selectedFileNames.clear()
     }
+
     val allSelected: Boolean
         get() = selectedFileNames.size == fileNamesList.size
 }
