@@ -1,5 +1,6 @@
 package `in`.v89bhp.checkablenotes.ui.home
 
+import android.icu.text.SimpleDateFormat
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +47,7 @@ import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,7 +157,7 @@ fun NotesGrid(
                 onClick = {
                     if (fileNames[index] in selectedFileNames) {// The card has been selected by a long press. De-select it
                         selectedFileNames.remove(fileNames[index])
-                    } else if (selectedFileNames.isNotEmpty()) {
+                    } else if (selectedFileNames.isNotEmpty()) {// Single click after a long press. Add file name to selected file names list:
                         selectedFileNames.add(fileNames[index])
                     } else {// Navigate to the note represented by the card:
                         navigateToNote(fileNames[index])
@@ -164,7 +166,13 @@ fun NotesGrid(
                 onLongPress = { onLongPress(fileNames[index]) },
                 isSelected = fileNames[index] in selectedFileNames,
                 isCABActivated = selectedFileNames.isNotEmpty(),
-                pendingItemsCount = note.list.sumOf { if (!it.isChecked) 1 as Int else 0 }
+                pendingItemsCount = note.list.sumOf { if (!it.isChecked) 1 as Int else 0 },
+                lastModified = SimpleDateFormat("d MMM yyyy h:mm a").format(
+                    File(
+                        LocalContext.current.filesDir,
+                        fileNames[index]
+                    ).lastModified()
+                )
             )
         }
     }
@@ -179,12 +187,13 @@ fun NoteCard(
     isSelected: Boolean,
     isCABActivated: Boolean,
     pendingItemsCount: Int,
+    lastModified: String,
     modifier: Modifier = Modifier
 ) {
 
     Card(
         modifier = modifier
-            .size(width = 100.dp, height = 100.dp)
+            .size(width = 110.dp, height = 110.dp)
             .semantics { selected = isSelected }
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -208,7 +217,7 @@ fun NoteCard(
             ) {
                 Text(
                     text = note,
-                    maxLines = 4,
+                    maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .weight(0.75f)
@@ -240,6 +249,14 @@ fun NoteCard(
                     )
                 }
             }
+            Text(
+                text = lastModified,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(bottom = 8.dp, start = 8.dp, top = 20.dp)
+
+            )
         }
     }
 
@@ -255,6 +272,7 @@ fun NoteCardPreview() {
         isSelected = true,
         isCABActivated = false,
         pendingItemsCount = 3,
+        lastModified = "13 Jan 2023 3:01 AM",
         modifier = Modifier.padding(8.dp)
     )
 }
