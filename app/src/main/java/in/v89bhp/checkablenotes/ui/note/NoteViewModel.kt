@@ -25,6 +25,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
     private val notesRepository: NotesRepository = Graph.notesRepository
 
     var firstTime = true
+
     var text by mutableStateOf(TextFieldValue("", TextRange(0, 7)))
 
     val list = mutableListOf<CheckableItem>().toMutableStateList()
@@ -33,6 +34,10 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     var openDeleteDialog by mutableStateOf(false)
 
+    val pendingItemsCount: Int
+        get() = list.sumOf {
+            if (!it.isChecked) 1 as Int else 0
+        }
 
     fun loadNote(fileName: String) {
         viewModelScope.launch {
@@ -40,7 +45,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
                 loadedNote = notesRepository.loadNote(getApplication(), fileName)
                 text = loadedNote!!.text
                 list.clear()
-                list.addAll(loadedNote!!.list.map{
+                list.addAll(loadedNote!!.list.map {
                     it.copy()
                 })
             } catch (ex: FileNotFoundException) {
