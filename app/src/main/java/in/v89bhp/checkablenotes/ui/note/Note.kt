@@ -2,6 +2,7 @@ package `in`.v89bhp.checkablenotes.ui.note
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -193,6 +194,7 @@ fun Note(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CheckableList(
     checkableItems: List<CheckableItem>,
@@ -207,7 +209,8 @@ fun CheckableList(
             key = { it.id }) { checkableItem ->
             ItemCard(
                 checkableItem = checkableItem,
-                onCheckedChange = { newValue -> onCheckedChange(checkableItem, newValue) }
+                onCheckedChange = { newValue -> onCheckedChange(checkableItem, newValue) },
+                modifier = Modifier.animateItemPlacement()
             )
         }
     }
