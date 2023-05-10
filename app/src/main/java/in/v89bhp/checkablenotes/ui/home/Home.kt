@@ -47,6 +47,8 @@ import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
+import `in`.v89bhp.checkablenotes.ui.theme.green
+import `in`.v89bhp.checkablenotes.ui.theme.light_green
 import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
 import java.io.File
 
@@ -209,7 +211,7 @@ fun NoteCard(
             },
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer
-            else if (pendingItemsCount == 0) MaterialTheme.colorScheme.tertiaryContainer
+            else if (pendingItemsCount == 0) light_green
             else MaterialTheme.colorScheme.surfaceVariant
         )
     )
