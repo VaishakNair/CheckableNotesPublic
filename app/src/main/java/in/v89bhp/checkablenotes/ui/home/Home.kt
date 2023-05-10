@@ -5,9 +5,10 @@ import android.icu.text.SimpleDateFormat
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -30,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -47,7 +47,6 @@ import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
-import `in`.v89bhp.checkablenotes.ui.theme.green
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
 import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
 import java.io.File
@@ -216,11 +215,13 @@ fun NoteCard(
         )
     )
     {
-        Box() {
+        Column(modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween) {
             Row(
                 modifier = Modifier
                     .padding(8.dp)
-                    .fillMaxSize(),
+                    .fillMaxWidth()
+                    .weight(0.8f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -231,38 +232,41 @@ fun NoteCard(
                         .weight(0.75f)
                         .align(Alignment.Top)
                 )
-                if (isSelected || isCABActivated) {
-                    Icon(
-                        painter = if (isSelected) rememberVectorPainter(Icons.Outlined.CheckCircle) else painterResource(
-                            id = R.drawable.outline_circle_24
-                        ),
-                        contentDescription = null,
-                        modifier = Modifier.weight(0.25f)
-                    )
+                Column(modifier = Modifier.weight(0.25f).align(Alignment.CenterVertically)) {
+                    if (isSelected || isCABActivated) {
+                        Icon(
+                            painter = if (isSelected) rememberVectorPainter(Icons.Outlined.CheckCircle) else painterResource(
+                                id = R.drawable.outline_circle_24
+                            ),
+                            contentDescription = null,
+
+                            )
+                    } else if (pendingItemsCount > 0) {
+                        Badge(
+                            modifier = Modifier
+                                .padding(5.dp)
+
+                        ) {
+                            Text(
+                                pendingItemsCount.toString(),
+                                modifier = Modifier
+                                    .semantics {
+                                        contentDescription =
+                                            "$pendingItemsCount pending items"
+                                    }
+                            )
+                        }
+                    }
                 }
+
             }
-            if (pendingItemsCount > 0) {
-                Badge(
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .align(Alignment.TopEnd)
-                ) {
-                    Text(
-                        pendingItemsCount.toString(),
-                        modifier = Modifier
-                            .semantics {
-                                contentDescription =
-                                    "$pendingItemsCount pending items"
-                            }
-                    )
-                }
-            }
+
             Text(
                 text = lastModified,
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(bottom = 8.dp, start = 8.dp, top = 20.dp)
+                    .padding(bottom = 8.dp, start = 8.dp)
+                    .weight(0.2f)
 
             )
         }
