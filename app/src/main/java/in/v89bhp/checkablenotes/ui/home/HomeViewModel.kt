@@ -1,6 +1,12 @@
 package `in`.v89bhp.checkablenotes.ui.home
 
 import android.app.Application
+import android.content.Context
+import android.os.Build
+import android.os.CombinedVibration
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -78,4 +84,31 @@ class HomeViewModel(
 
     val allSelected: Boolean
         get() = selectedFileNames.size == fileNamesList.size
+
+    fun longPressVibrate() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {// For Devices that support VibratorManager:
+            val vibratorManager: VibratorManager =
+                (getApplication() as Context).getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.vibrate(
+                CombinedVibration.createParallel(
+                    VibrationEffect.createPredefined(
+                        VibrationEffect.EFFECT_CLICK
+                    )
+                )
+            )
+        } else {
+            val vibrator =
+                (getApplication() as Context).getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // Vibrator (Deprecated) with VibrationEffect
+                vibrator.vibrate(
+                    VibrationEffect.createOneShot(
+                        1000, VibrationEffect.DEFAULT_AMPLITUDE
+
+                    )
+                )
+            } else {
+                vibrator.vibrate(1000) // Generic vibration based on time
+            }
+        }
+    }
 }

@@ -115,6 +115,10 @@ fun Home(
             notes = homeViewModel.notesList,
             navigateToNote = navigateToNote,
             onLongPress = { fileName ->
+                if (homeViewModel.selectedFileNames.isEmpty()) { // First long press. Vibrate
+                    // TODO
+                    homeViewModel.longPressVibrate()
+                }
                 if (fileName !in homeViewModel.selectedFileNames) { // Ignore subsequent long-presses from the same item.
                     homeViewModel.selectedFileNames.add(fileName)
                 }
