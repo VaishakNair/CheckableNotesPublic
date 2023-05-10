@@ -1,13 +1,17 @@
 package `in`.v89bhp.checkablenotes.ui.note
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.v89bhp.checkablenotes.Graph
@@ -34,7 +38,6 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     var openDeleteDialog by mutableStateOf(false)
 
-    var openShareDialog by mutableStateOf(false)
 
     val pendingItemsCount: Int
         get() = list.sumOf {
@@ -143,6 +146,15 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
         }
+    }
+
+    fun showSharesheet(context: Context) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, text.text)
+            type = "text/plain"
+        }
+        context.startActivity(Intent.createChooser(sendIntent, null))
     }
 }
 

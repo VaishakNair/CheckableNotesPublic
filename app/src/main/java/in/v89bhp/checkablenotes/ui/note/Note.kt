@@ -40,7 +40,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -86,7 +85,8 @@ fun Note(
                         contentDescription = stringResource(R.string.delete_note)
                     )
                 }
-                IconButton(onClick = { noteViewModel.openShareDialog = true }) {
+                val context = LocalContext.current
+                IconButton(onClick = { noteViewModel.showSharesheet(context) }) {
                     Icon(
                         imageVector = Icons.Filled.Share,
                         contentDescription = stringResource(R.string.share_note)
@@ -189,10 +189,6 @@ fun Note(
                     }
                     noteViewModel.openDeleteDialog = false
                 })
-        }
-
-        if (noteViewModel.openShareDialog) {
-            // TODO
         }
     }
 }
