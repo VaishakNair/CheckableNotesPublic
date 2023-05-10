@@ -34,6 +34,8 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     var openDeleteDialog by mutableStateOf(false)
 
+    var openShareDialog by mutableStateOf(false)
+
     val pendingItemsCount: Int
         get() = list.sumOf {
             if (!it.isChecked) 1 as Int else 0

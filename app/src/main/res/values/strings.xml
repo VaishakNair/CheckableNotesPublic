@@ -9,4 +9,5 @@
     <string name="delete_selected_notes">Delete selected notes?</string>
     <string name="select_all">Select all</string>
     <string name="deselect_all">Deselect all</string>
+    <string name="share_note">Share note</string>
 </resources>

@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
@@ -83,6 +84,12 @@ fun Note(
                     Icon(
                         imageVector = Icons.Filled.Delete,
                         contentDescription = stringResource(R.string.delete_note)
+                    )
+                }
+                IconButton(onClick = { noteViewModel.openShareDialog = true }) {
+                    Icon(
+                        imageVector = Icons.Filled.Share,
+                        contentDescription = stringResource(R.string.share_note)
                     )
                 }
             },
@@ -182,6 +189,10 @@ fun Note(
                     }
                     noteViewModel.openDeleteDialog = false
                 })
+        }
+
+        if (noteViewModel.openShareDialog) {
+            // TODO
         }
     }
 }
