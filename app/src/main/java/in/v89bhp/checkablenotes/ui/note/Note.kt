@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -35,10 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -55,8 +54,9 @@ import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.home.HomeViewModel
 import `in`.v89bhp.checkablenotes.ui.theme.green
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun Note(
     fileName: String,
@@ -111,15 +111,17 @@ fun Note(
             })
     }) { contentPadding ->
 
-        var selectedTabIndex by rememberSaveable { mutableStateOf(0) }
+
         val titles = listOf("Note", "Checkable List")
+        val coroutineScope = rememberCoroutineScope()
+        val pagerState = rememberPagerState()
 
         Column(modifier = modifier.padding(contentPadding)) {
-            TabRow(selectedTabIndex = selectedTabIndex) {
+            TabRow(selectedTabIndex = pagerState.currentPage) {
                 titles.forEachIndexed { index, title ->
                     Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
+                        selected = pagerState.currentPage == index,
+                        onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
                         text = {
 
                             BadgedBox(
@@ -150,26 +152,36 @@ fun Note(
                     )
                 }
             }
-            if (selectedTabIndex == 0) { // Tab 1
-                TextField(
-                    value = noteViewModel.text,
-                    onValueChange = {
-                        noteViewModel.text = it
-                        noteViewModel.updateList(it)
-                    },
-                    label = { Text("Enter Items Line by Line:") },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
-                )
-            } else { // Tab 2
-                CheckableList(checkableItems = noteViewModel.list,
-                    modifier = Modifier.padding(16.dp),
-                    onCheckedChange = { checkableItem, newValue ->
-                        noteViewModel.onCheckedChange(checkableItem, newValue)
-                    })
+
+            HorizontalPager(
+                pageCount = titles.size,
+                state = pagerState
+            ) { page ->
+                if (page == 0) { // Tab 1
+                    TextField(
+                        value = noteViewModel.text,
+                        onValueChange = {
+                            noteViewModel.text = it
+                            noteViewModel.updateList(it)
+                        },
+                        label = { Text("Enter Items Line by Line:") },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+                    )
+                } else { // Tab 2
+                    CheckableList(checkableItems = noteViewModel.list,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        onCheckedChange = { checkableItem, newValue ->
+                            noteViewModel.onCheckedChange(checkableItem, newValue)
+                        })
+                }
             }
+
+
 
             BackHandler(true) {
                 onBackPressed(
