@@ -62,16 +62,12 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         val newList: List<CheckableItem> = if (value.text.trim() == "") {// Empty list
             emptyList()
         } else {
-            val itemsList = mutableListOf<CheckableItem>()
-
-            itemsList.addAll(value.text.trim().split('\n').filter { it.trim() != "" }
+            value.text.trim().split('\n').filter { it.trim() != "" }
                 .mapIndexed { index, item ->
                     CheckableItem(index, item)
-
-                })
-            itemsList
-
+                }
         }
+
         Log.i(TAG, "NewList:")
         Log.i(TAG, newList.joinToString { "Id: ${it.id} Message: ${it.name}" })
         Log.i(TAG, "List")
