@@ -59,17 +59,23 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun updateList(value: TextFieldValue) {
-        val newList = if (value.text.trim() == "") {
+        val newList: List<CheckableItem> = if (value.text.trim() == "") {// Empty list
             emptyList()
         } else {
-            value.text.trim().split('\n').mapIndexed { index, value ->
-                CheckableItem(index, value)
-            }
+            val itemsList = mutableListOf<CheckableItem>()
+
+            itemsList.addAll(value.text.trim().split('\n').filter { it.trim() != "" }
+                .mapIndexed { index, item ->
+                    CheckableItem(index, item)
+
+                })
+            itemsList
+
         }
         Log.i(TAG, "NewList:")
-        Log.i(TAG, newList.joinToString() { "Id: ${it.id} Message: ${it.name}" })
+        Log.i(TAG, newList.joinToString { "Id: ${it.id} Message: ${it.name}" })
         Log.i(TAG, "List")
-        Log.i(TAG, list.joinToString() { "Id: ${it.id} Message: ${it.name}" })
+        Log.i(TAG, list.joinToString { "Id: ${it.id} Message: ${it.name}" })
 
 
         var maxId: Int = if (list.isEmpty()) 0 else list.maxOf { it.id }
