@@ -7,6 +7,7 @@ import android.os.CombinedVibration
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -53,6 +54,7 @@ class HomeViewModel(
     }
 
     fun saveNote(fileName: String, text: TextFieldValue, list: List<CheckableItem>) {
+        Log.i("HomeViewModel", "Saving note: ${text.text}")
         viewModelScope.launch {
 
             notesRepository.saveNote(

@@ -1,5 +1,6 @@
 package `in`.v89bhp.checkablenotes.ui.note
 
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -37,16 +38,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.nameischeckedequals
@@ -54,6 +60,7 @@ import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.home.HomeViewModel
 import `in`.v89bhp.checkablenotes.ui.theme.green
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -65,14 +72,35 @@ fun Note(
     noteViewModel: NoteViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     homeViewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
         viewModelStoreOwner = LocalContext.current as ComponentActivity
-    )
+    ),
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
-
+    val coroutineScope = rememberCoroutineScope()
     if (noteViewModel.firstTime) { // View model has been loaded for the first time. Load note (if any)
         noteViewModel.loadNote(fileName)
         noteViewModel.firstTime = false
     }
 
+    DisposableEffect(lifecycleOwner) {
+
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_STOP -> {
+                    Log.i("Note", "Activity getting destroyed")
+                    onDestroy(fileName, noteViewModel, coroutineScope)
+                }
+                else -> {// Do nothing for other events.
+
+                }
+            }
+
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     Scaffold(topBar = {
         TopAppBar(
@@ -269,6 +297,7 @@ fun onBackPressed(
     homeViewModel: HomeViewModel,
     navigateBack: () -> Unit
 ) {
+    Log.i("Note", "Latest text: ${viewModel.text.text}\nLoaded text: ${viewModel.loadedNote!!.text.text}")
     if (viewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
         homeViewModel.deleteNotes(listOf(fileName))
     } else {
@@ -288,5 +317,35 @@ fun onBackPressed(
 
     }
     navigateBack()
+}
+
+fun onDestroy(
+    fileName: String,
+    viewModel: NoteViewModel,
+    coroutineScope: CoroutineScope
+) {
+    Log.i("Note", "Latest text: ${viewModel.text.text}\nLoaded text: ${viewModel.loadedNote?.text?.text}")
+
+    if (viewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
+        viewModel.deleteNotes(listOf(fileName), coroutineScope)
+    } else {
+        viewModel.loadedNote?.let { loadedNote -> // Not a new note:
+            if (loadedNote.text.text != viewModel.text.text || !(loadedNote.list nameischeckedequals viewModel.list)) {// Note has been updated (either text or checkable list):
+                viewModel.saveNote(
+                    fileName,
+                    viewModel.text,
+                    viewModel.list,
+                    coroutineScope
+                )
+            }
+        } ?: viewModel.saveNote(
+            fileName,
+            viewModel.text,
+            viewModel.list,
+            coroutineScope
+        ) // New note. Save it.
+
+    }
+
 }
 
