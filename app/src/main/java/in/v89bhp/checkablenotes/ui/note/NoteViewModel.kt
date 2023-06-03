@@ -157,23 +157,5 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         }
         context.startActivity(Intent.createChooser(sendIntent, null))
     }
-
-    fun deleteNotes(fileNames: List<String>, coroutineScope: CoroutineScope) {
-        coroutineScope.launch {
-            notesRepository.deleteNotes(getApplication(), fileNames)
-        }
-    }
-
-    fun saveNote(fileName: String, text: TextFieldValue, list: List<CheckableItem>, coroutineScope: CoroutineScope) {
-        Log.i("NoteViewModel", "Saving note: ${text.text}")
-        coroutineScope.launch {
-
-            notesRepository.saveNote(
-                context = getApplication(),
-                note = Note(text = text, list = list),
-                fileName = fileName
-            )
-        }
-    }
 }
 

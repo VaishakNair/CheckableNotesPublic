@@ -1,6 +1,5 @@
 package `in`.v89bhp.checkablenotes.ui.note
 
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -60,7 +59,6 @@ import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.home.HomeViewModel
 import `in`.v89bhp.checkablenotes.ui.theme.green
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -75,7 +73,6 @@ fun Note(
     ),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
-    val coroutineScope = rememberCoroutineScope()
     if (noteViewModel.firstTime) { // View model has been loaded for the first time. Load note (if any)
         noteViewModel.loadNote(fileName)
         noteViewModel.firstTime = false
@@ -86,9 +83,9 @@ fun Note(
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_STOP -> {
-                    Log.i("Note", "Activity getting destroyed")
-                    onDestroy(fileName, noteViewModel, coroutineScope)
+                    onBackPressed(fileName, noteViewModel, homeViewModel) {}
                 }
+
                 else -> {// Do nothing for other events.
 
                 }
@@ -297,7 +294,6 @@ fun onBackPressed(
     homeViewModel: HomeViewModel,
     navigateBack: () -> Unit
 ) {
-    Log.i("Note", "Latest text: ${viewModel.text.text}\nLoaded text: ${viewModel.loadedNote!!.text.text}")
     if (viewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
         homeViewModel.deleteNotes(listOf(fileName))
     } else {
@@ -317,35 +313,5 @@ fun onBackPressed(
 
     }
     navigateBack()
-}
-
-fun onDestroy(
-    fileName: String,
-    viewModel: NoteViewModel,
-    coroutineScope: CoroutineScope
-) {
-    Log.i("Note", "Latest text: ${viewModel.text.text}\nLoaded text: ${viewModel.loadedNote?.text?.text}")
-
-    if (viewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
-        viewModel.deleteNotes(listOf(fileName), coroutineScope)
-    } else {
-        viewModel.loadedNote?.let { loadedNote -> // Not a new note:
-            if (loadedNote.text.text != viewModel.text.text || !(loadedNote.list nameischeckedequals viewModel.list)) {// Note has been updated (either text or checkable list):
-                viewModel.saveNote(
-                    fileName,
-                    viewModel.text,
-                    viewModel.list,
-                    coroutineScope
-                )
-            }
-        } ?: viewModel.saveNote(
-            fileName,
-            viewModel.text,
-            viewModel.list,
-            coroutineScope
-        ) // New note. Save it.
-
-    }
-
 }
 
