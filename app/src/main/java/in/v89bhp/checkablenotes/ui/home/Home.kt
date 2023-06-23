@@ -5,6 +5,7 @@ import android.icu.text.SimpleDateFormat
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,6 +42,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -83,7 +85,10 @@ fun Home(
             ContextualTopAppBar(
                 isContextual = homeViewModel.selectedFileNames.isNotEmpty(),
                 normalTitle = stringResource(id = R.string.app_name),
-                contextualTitle = stringResource(R.string.x_selected, homeViewModel.selectedFileNames.size),
+                contextualTitle = stringResource(
+                    R.string.x_selected,
+                    homeViewModel.selectedFileNames.size
+                ),
                 normalActions = { },
                 contextualActions = {
                     IconButton(onClick = { homeViewModel.openDeleteDialog = true }) {
@@ -110,21 +115,35 @@ fun Home(
             )
         }
     ) { contentPadding ->
-        NotesGrid(
-            fileNames = homeViewModel.fileNamesList,
-            selectedFileNames = homeViewModel.selectedFileNames,
-            notes = homeViewModel.notesList,
-            navigateToNote = navigateToNote,
-            onLongPress = { fileName ->
-                if (homeViewModel.selectedFileNames.isEmpty()) { // First long press. Vibrate
-                    homeViewModel.longPressVibrate()
-                }
-                if (fileName !in homeViewModel.selectedFileNames) { // Ignore subsequent long-presses from the same item.
-                    homeViewModel.selectedFileNames.add(fileName)
-                }
-            },
-            modifier = modifier.padding(contentPadding)
-        )
+        Box(modifier = Modifier.fillMaxSize()) {
+
+
+            if (homeViewModel.fileNamesList.isNotEmpty()) {
+                NotesGrid(
+                    fileNames = homeViewModel.fileNamesList,
+                    selectedFileNames = homeViewModel.selectedFileNames,
+                    notes = homeViewModel.notesList,
+                    navigateToNote = navigateToNote,
+                    onLongPress = { fileName ->
+                        if (homeViewModel.selectedFileNames.isEmpty()) { // First long press. Vibrate
+                            homeViewModel.longPressVibrate()
+                        }
+                        if (fileName !in homeViewModel.selectedFileNames) { // Ignore subsequent long-presses from the same item.
+                            homeViewModel.selectedFileNames.add(fileName)
+                        }
+                    },
+                    modifier = Modifier.padding(contentPadding)
+                )
+            } else { // No notes. Show hint:
+                Text(
+                    text = stringResource(R.string.no_notes),
+                    modifier = Modifier
+                        .padding(contentPadding)
+                        .align(Alignment.Center),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
 
         if (homeViewModel.openDeleteDialog) {
             ConfirmationDialog(title = R.string.delete_note,
