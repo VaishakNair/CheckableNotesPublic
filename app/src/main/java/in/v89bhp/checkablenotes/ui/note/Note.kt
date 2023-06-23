@@ -38,6 +38,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,9 +74,8 @@ fun Note(
     ),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
-    if (noteViewModel.firstTime) { // View model has been loaded for the first time. Load note (if any)
+    LaunchedEffect(true) {// Load note (if any) during composition. Ignored during recompositions
         noteViewModel.loadNote(fileName)
-        noteViewModel.firstTime = false
     }
 
     DisposableEffect(lifecycleOwner) {

@@ -27,8 +27,6 @@ class HomeViewModel(
     private val TAG = "HomeViewModel"
     private val notesRepository: NotesRepository = Graph.notesRepository
 
-    var firstTime = true
-
     var notesList = mutableListOf<Note>().toMutableStateList()
     var fileNamesList = mutableListOf<String>().toMutableStateList()
 

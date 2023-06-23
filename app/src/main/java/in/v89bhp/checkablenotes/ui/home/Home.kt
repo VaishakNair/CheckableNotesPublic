@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -61,9 +62,8 @@ fun Home(
     ),
 ) {
 
-    if (homeViewModel.firstTime) { // View model has been loaded for the first time. Load notes (if any)
+    LaunchedEffect(true) {
         homeViewModel.loadNotesInitial()
-        homeViewModel.firstTime = false
     }
 
     Scaffold(
@@ -117,7 +117,6 @@ fun Home(
             navigateToNote = navigateToNote,
             onLongPress = { fileName ->
                 if (homeViewModel.selectedFileNames.isEmpty()) { // First long press. Vibrate
-                    // TODO
                     homeViewModel.longPressVibrate()
                 }
                 if (fileName !in homeViewModel.selectedFileNames) { // Ignore subsequent long-presses from the same item.
@@ -215,8 +214,10 @@ fun NoteCard(
         )
     )
     {
-        Column(modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
             Row(
                 modifier = Modifier
                     .padding(8.dp)
@@ -232,7 +233,11 @@ fun NoteCard(
                         .weight(0.75f)
                         .align(Alignment.Top)
                 )
-                Column(modifier = Modifier.weight(0.25f).align(Alignment.CenterVertically)) {
+                Column(
+                    modifier = Modifier
+                        .weight(0.25f)
+                        .align(Alignment.CenterVertically)
+                ) {
                     if (isSelected || isCABActivated) {
                         Icon(
                             painter = if (isSelected) rememberVectorPainter(Icons.Outlined.CheckCircle) else painterResource(
