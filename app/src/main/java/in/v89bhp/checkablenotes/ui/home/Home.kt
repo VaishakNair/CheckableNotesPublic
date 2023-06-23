@@ -83,7 +83,7 @@ fun Home(
             ContextualTopAppBar(
                 isContextual = homeViewModel.selectedFileNames.isNotEmpty(),
                 normalTitle = stringResource(id = R.string.app_name),
-                contextualTitle = stringResource(R.string.x_selected).format(homeViewModel.selectedFileNames.size),// TODO
+                contextualTitle = stringResource(R.string.x_selected, homeViewModel.selectedFileNames.size),
                 normalActions = { },
                 contextualActions = {
                     IconButton(onClick = { homeViewModel.openDeleteDialog = true }) {

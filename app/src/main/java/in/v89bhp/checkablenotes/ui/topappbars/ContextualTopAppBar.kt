@@ -51,32 +51,3 @@ fun ContextualTopAppBar(
         }
     )
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-fun TopAppBarPreview() {
-    MaterialTheme() {
-        Scaffold(topBar = {
-            ContextualTopAppBar(
-                isContextual = true,
-                normalTitle = stringResource(id = R.string.app_name),
-                contextualTitle = stringResource(R.string.x_selected).format(1),// TODO
-                normalActions = { },
-                contextualActions = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = stringResource(R.string.delete)
-                        )
-                    }
-                },
-                onClose = {/* TODO */ },
-
-                )
-        }) {
-            Text("Hello, world", modifier = Modifier.padding(it))
-        }
-    }
-
-}
