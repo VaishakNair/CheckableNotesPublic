@@ -2,6 +2,7 @@ package `in`.v89bhp.checkablenotes.ui.home
 
 import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -52,6 +53,7 @@ import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
 import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
+import kotlinx.coroutines.delay
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,6 +67,8 @@ fun Home(
 ) {
 
     LaunchedEffect(true) {
+        Log.i("LE", "Home load notes")
+        delay(150) // Delay for NoteViewModel.saveNote() coroutine to complete. Useful when coming back after creating a new note.
         homeViewModel.loadNotesInitial()
     }
 

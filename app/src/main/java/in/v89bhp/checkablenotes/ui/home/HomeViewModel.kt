@@ -51,19 +51,7 @@ class HomeViewModel(
         selectedFileNames.clear()
     }
 
-    fun saveNote(fileName: String, text: TextFieldValue, list: List<CheckableItem>) {
-        Log.i("HomeViewModel", "Saving note: ${text.text}")
-        viewModelScope.launch {
 
-            notesRepository.saveNote(
-                context = getApplication(),
-                note = Note(text = text, list = list),
-                fileName = fileName
-            )
-
-            loadNotes()
-        }
-    }
 
     fun deleteNotes(fileNames: List<String>) {
         viewModelScope.launch {

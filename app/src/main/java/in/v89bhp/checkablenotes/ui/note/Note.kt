@@ -1,6 +1,5 @@
 package `in`.v89bhp.checkablenotes.ui.note
 
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -57,7 +56,6 @@ import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.nameischeckedequals
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
-import `in`.v89bhp.checkablenotes.ui.home.HomeViewModel
 import `in`.v89bhp.checkablenotes.ui.theme.green
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
 import kotlinx.coroutines.launch
@@ -69,9 +67,6 @@ fun Note(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     noteViewModel: NoteViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    homeViewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
-        viewModelStoreOwner = LocalContext.current as ComponentActivity
-    ),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
     LaunchedEffect(true) {// Load note (if any) during composition. Ignored during recompositions
@@ -83,7 +78,7 @@ fun Note(
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_STOP -> {
-                    onBackPressed(fileName, noteViewModel, homeViewModel) {}
+                    onBackPressed(fileName, noteViewModel) {}
                 }
 
                 else -> {// Do nothing for other events.
@@ -124,7 +119,6 @@ fun Note(
                     onBackPressed(
                         fileName,
                         noteViewModel,
-                        homeViewModel,
                         navigateBack
                     )
                 }) {
@@ -212,7 +206,7 @@ fun Note(
                 onBackPressed(
                     fileName,
                     noteViewModel,
-                    homeViewModel,
+
                     navigateBack
                 )
             }
@@ -222,7 +216,7 @@ fun Note(
                 text = R.string.delete_this_note,
                 onConfirmation = { confirmed ->
                     if (confirmed) {
-                        homeViewModel.deleteNotes(listOf(fileName))
+                        noteViewModel.deleteNotes(listOf(fileName))
                         navigateBack()
                     }
                     noteViewModel.openDeleteDialog = false
@@ -290,25 +284,24 @@ fun ItemCard(
 
 fun onBackPressed(
     fileName: String,
-    viewModel: NoteViewModel,
-    homeViewModel: HomeViewModel,
+    noteViewModel: NoteViewModel,
     navigateBack: () -> Unit
 ) {
-    if (viewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
-        homeViewModel.deleteNotes(listOf(fileName))
+    if (noteViewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
+        noteViewModel.deleteNotes(listOf(fileName))
     } else {
-        viewModel.loadedNote?.let { loadedNote -> // Not a new note:
-            if (loadedNote.text.text != viewModel.text.text || !(loadedNote.list nameischeckedequals viewModel.list)) {// Note has been updated (either text or checkable list):
-                homeViewModel.saveNote(
+        noteViewModel.loadedNote?.let { loadedNote -> // Not a new note:
+            if (loadedNote.text.text != noteViewModel.text.text || !(loadedNote.list nameischeckedequals noteViewModel.list)) {// Note has been updated (either text or checkable list):
+                noteViewModel.saveNote(
                     fileName,
-                    viewModel.text,
-                    viewModel.list
+                    noteViewModel.text,
+                    noteViewModel.list
                 )
             }
-        } ?: homeViewModel.saveNote(
+        } ?: noteViewModel.saveNote( // New note:
             fileName,
-            viewModel.text,
-            viewModel.list
+            noteViewModel.text,
+            noteViewModel.list
         ) // New note. Save it.
 
     }

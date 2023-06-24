@@ -155,5 +155,23 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         }
         context.startActivity(Intent.createChooser(sendIntent, null))
     }
+
+    fun saveNote(fileName: String, text: TextFieldValue, list: List<CheckableItem>) {
+        Log.i("HomeViewModel", "Saving note: ${text.text}")
+        viewModelScope.launch {
+
+            notesRepository.saveNote(
+                context = getApplication(),
+                note = Note(text = text, list = list),
+                fileName = fileName
+            )
+        }
+    }
+
+    fun deleteNotes(fileNames: List<String>) {
+        viewModelScope.launch {
+            notesRepository.deleteNotes(getApplication(), fileNames)
+        }
+    }
 }
 
