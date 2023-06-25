@@ -33,6 +33,9 @@ class HomeViewModel(
     var openDeleteDialog by mutableStateOf(false)
     var selectedFileNames = mutableListOf<String>().toMutableStateList()
 
+    var isLoadingNotes by mutableStateOf(false)
+    var noNotes by mutableStateOf(false)
+
     fun loadNotesInitial() {
         viewModelScope.launch {
             loadNotes()
@@ -41,6 +44,8 @@ class HomeViewModel(
     }
 
     private suspend fun loadNotes() {
+        isLoadingNotes = true
+
         val (fileNames, notes) = notesRepository.loadNotes(getApplication())
         fileNamesList.clear()
         fileNamesList.addAll(fileNames)
@@ -49,6 +54,9 @@ class HomeViewModel(
         notesList.addAll(notes)
 
         selectedFileNames.clear()
+
+        isLoadingNotes = false
+        noNotes = fileNamesList.isEmpty()
     }
 
 

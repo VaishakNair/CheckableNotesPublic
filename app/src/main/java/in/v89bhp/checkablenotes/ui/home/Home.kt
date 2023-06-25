@@ -51,6 +51,7 @@ import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
+import `in`.v89bhp.checkablenotes.ui.progressbars.CircularProgress
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
 import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
 import kotlinx.coroutines.delay
@@ -121,7 +122,9 @@ fun Home(
     ) { contentPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
 
-
+            if (homeViewModel.isLoadingNotes) {
+                CircularProgress(text = stringResource(R.string.loading))
+            }
             if (homeViewModel.fileNamesList.isNotEmpty()) {
                 NotesGrid(
                     fileNames = homeViewModel.fileNamesList,
@@ -138,7 +141,8 @@ fun Home(
                     },
                     modifier = Modifier.padding(contentPadding)
                 )
-            } else { // No notes. Show hint:
+            }
+            if (homeViewModel.noNotes) { // No notes. Show hint:
                 Text(
                     text = stringResource(R.string.no_notes),
                     modifier = Modifier
