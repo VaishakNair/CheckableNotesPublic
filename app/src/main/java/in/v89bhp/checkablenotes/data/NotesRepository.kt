@@ -8,10 +8,10 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
-    val TAG = "NotesRepository"
+
     suspend fun loadNotes(context: Context): Pair<List<String>, List<Note>> {
         val fileNames: List<String> =
-            context.fileList().toList().filter { fileName -> fileName.endsWith(".json") }
+            context.fileList().toList().filter { fileName -> fileName.matches(Regex("[0-9]+\\.json")) }
                 .sortedByDescending { fileName ->
                     File(context.filesDir, fileName).lastModified()
                 }
@@ -72,5 +72,9 @@ class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
                 context.deleteFile(fileName)
             }
         }
+    }
+
+    companion object {
+        const val TAG = "NotesRepository"
     }
 }
