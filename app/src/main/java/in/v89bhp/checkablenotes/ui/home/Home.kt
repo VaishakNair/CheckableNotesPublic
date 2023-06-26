@@ -67,7 +67,7 @@ fun Home(
     ),
 ) {
 
-    LaunchedEffect(true) {
+    LaunchedEffect(homeViewModel) {
         Log.i("LE", "Home load notes")
         delay(150) // Delay for NoteViewModel.saveNote() coroutine to complete. Useful when coming back after creating a new note.
         homeViewModel.loadNotesInitial()
