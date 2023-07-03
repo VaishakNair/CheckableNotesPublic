@@ -7,11 +7,13 @@ import android.view.ViewTreeObserver
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -171,43 +173,41 @@ fun Note(
                         },
                         text = {
 
-                            BadgedBox(
+                            Column() {
+                                if (index == 1) {
+                                    Row(
+                                        modifier = Modifier.align(Alignment.End),
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        if (noteViewModel.completedItemsCount >= 0) {
+                                            Badge(
+                                                containerColor = green,
+                                                contentColor = white
+                                            ) {
 
-                                badge = {
-                                    if (index == 1) {
-                                        Row(
-                                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                                        ) {
-                                            if (noteViewModel.completedItemsCount >= 0) {
-                                                Badge(
-                                                    containerColor = green,
-                                                    contentColor = white
-                                                ) {
+                                                Text(
+                                                    text = (noteViewModel.completedItemsCount).toString(),
+                                                    modifier = Modifier.semantics {
+                                                        contentDescription =
+                                                            "${noteViewModel.completedItemsCount} completed items"
+                                                    }
 
-                                                    Text(
-                                                        text = (noteViewModel.completedItemsCount).toString(),
-                                                        modifier = Modifier.semantics {
-                                                            contentDescription =
-                                                                "${noteViewModel.completedItemsCount} completed items"
-                                                        }
-
-                                                    )
-                                                }
+                                                )
                                             }
-                                            if (noteViewModel.pendingItemsCount > 0) {
-                                                Badge(modifier = Modifier.padding(end = 4.dp)) {
-                                                    Text(
-                                                        text = noteViewModel.pendingItemsCount.toString(),
-                                                        modifier = Modifier.semantics {
-                                                            contentDescription =
-                                                                "${noteViewModel.pendingItemsCount} pending items"
-                                                        }
-                                                    )
-                                                }
+                                        }
+                                        if (noteViewModel.pendingItemsCount > 0) {
+                                            Badge() {
+                                                Text(
+                                                    text = noteViewModel.pendingItemsCount.toString(),
+                                                    modifier = Modifier.semantics {
+                                                        contentDescription =
+                                                            "${noteViewModel.pendingItemsCount} pending items"
+                                                    }
+                                                )
                                             }
                                         }
                                     }
-                                }) {
+                                }
                                 Text(
                                     text = title,
                                     maxLines = 2,
