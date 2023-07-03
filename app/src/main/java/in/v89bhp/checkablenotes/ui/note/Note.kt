@@ -74,6 +74,7 @@ import `in`.v89bhp.checkablenotes.data.nameischeckedequals
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.theme.green
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
+import `in`.v89bhp.checkablenotes.ui.theme.white
 import kotlinx.coroutines.launch
 
 @OptIn(
@@ -171,17 +172,39 @@ fun Note(
                         text = {
 
                             BadgedBox(
-                                badge = {
-                                    if (index == 1 && noteViewModel.pendingItemsCount > 0) {
-                                        Badge {
 
-                                            Text(
-                                                noteViewModel.pendingItemsCount.toString(),
-                                                modifier = Modifier.semantics {
-                                                    contentDescription =
-                                                        "${noteViewModel.pendingItemsCount} pending items"
+                                badge = {
+                                    if (index == 1) {
+                                        Row(
+                                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                        ) {
+                                            if (noteViewModel.completedItemsCount >= 0) {
+                                                Badge(
+                                                    containerColor = green,
+                                                    contentColor = white
+                                                ) {
+
+                                                    Text(
+                                                        text = (noteViewModel.completedItemsCount).toString(),
+                                                        modifier = Modifier.semantics {
+                                                            contentDescription =
+                                                                "${noteViewModel.completedItemsCount} completed items"
+                                                        }
+
+                                                    )
                                                 }
-                                            )
+                                            }
+                                            if (noteViewModel.pendingItemsCount > 0) {
+                                                Badge(modifier = Modifier.padding(end = 4.dp)) {
+                                                    Text(
+                                                        text = noteViewModel.pendingItemsCount.toString(),
+                                                        modifier = Modifier.semantics {
+                                                            contentDescription =
+                                                                "${noteViewModel.pendingItemsCount} pending items"
+                                                        }
+                                                    )
+                                                }
+                                            }
                                         }
                                     }
                                 }) {
