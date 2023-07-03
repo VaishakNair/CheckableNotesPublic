@@ -173,13 +173,13 @@ fun Note(
                         },
                         text = {
 
-                            Column() {
+                            Column {
                                 if (index == 1) {
                                     Row(
                                         modifier = Modifier.align(Alignment.End),
                                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                                     ) {
-                                        if (noteViewModel.completedItemsCount >= 0) {
+                                        if (noteViewModel.completedItemsCount > 0) {
                                             Badge(
                                                 containerColor = green,
                                                 contentColor = white
