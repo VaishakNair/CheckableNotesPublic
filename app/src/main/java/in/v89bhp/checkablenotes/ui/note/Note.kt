@@ -32,6 +32,7 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -59,7 +60,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -192,10 +192,13 @@ fun Note(
 
                     val scrollState = rememberScrollState()
                     val imeState = rememberImeState()
+                    val textStyle = LocalTextStyle.current
+
                     LaunchedEffect(imeState.value) {
                         if(imeState.value) {
+                            Log.i("Note.kt", "Font size: ${textStyle.fontSize.value} Is em ${textStyle.fontSize.isEm} Is sp ${textStyle.fontSize.isSp}")
+                            scrollState.scrollTo(getNewlineCount(noteViewModel.text) * 40)
                             Log.i("Note.kt", "Scroll state value: ${scrollState.value}")
-                            scrollState.scrollTo(getScrollPixel(noteViewModel.text) * 30)
                         }
                     }
                     TextField(
@@ -353,8 +356,8 @@ fun rememberImeState(): State<Boolean> {
     return imeState
 }
 
-fun getScrollPixel(tfv: TextFieldValue): Int {
-    val newlineCount = tfv.text.slice(0.. tfv.selection.start).filter { it == '\n' }.count()
+fun getNewlineCount(tfv: TextFieldValue): Int {
+    val newlineCount = tfv.text.slice(0 until tfv.selection.start).count { it == '\n' }
     Log.i("Note.kt", "Newline count: $newlineCount")
     return newlineCount
 }
