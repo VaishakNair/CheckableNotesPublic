@@ -1,6 +1,8 @@
 package `in`.v89bhp.checkablenotes.ui.note
 
+import android.content.Context
 import android.util.Log
+import android.util.TypedValue
 import android.view.ViewTreeObserver
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -81,6 +83,9 @@ fun Note(
     noteViewModel: NoteViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 ) {
+
+    val context = LocalContext.current
+
     LaunchedEffect(true) {// Load note (if any) during composition. Ignored during recompositions
         noteViewModel.loadNote(fileName)
     }
@@ -195,10 +200,20 @@ fun Note(
                     val textStyle = LocalTextStyle.current
 
                     LaunchedEffect(imeState.value) {
-                        if(imeState.value) {
-                            Log.i("Note.kt", "Font size: ${textStyle.fontSize.value} Is em ${textStyle.fontSize.isEm} Is sp ${textStyle.fontSize.isSp}")
-                            scrollState.scrollTo(getNewlineCount(noteViewModel.text) * 40)
-                            Log.i("Note.kt", "Scroll state value: ${scrollState.value}")
+                        if (imeState.value) {
+                            val newlineCount = getNewlineCount(noteViewModel.text)
+                            if (newlineCount > 2) {
+                                scrollState.scrollTo(
+                                    newlineCount *
+                                            getFontSizeInPixels(
+                                                textStyle.fontSize.value,
+                                                context
+                                            ).toInt()
+                                )
+                                Log.i("Note.kt", "Scroll state value: ${scrollState.value}")
+                            } else {
+                                scrollState.scrollTo(0)
+                            }
                         }
                     }
                     TextField(
@@ -357,8 +372,18 @@ fun rememberImeState(): State<Boolean> {
 }
 
 fun getNewlineCount(tfv: TextFieldValue): Int {
+    // 'tvf.selection.start' contains the index in the input string where the cursor is currently present. So
+    // Count newlines upto that position:
     val newlineCount = tfv.text.slice(0 until tfv.selection.start).count { it == '\n' }
     Log.i("Note.kt", "Newline count: $newlineCount")
     return newlineCount
+}
+
+fun getFontSizeInPixels(fontSizeSP: Float, context: Context): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        fontSizeSP,
+        context.resources.displayMetrics
+    );
 }
 
