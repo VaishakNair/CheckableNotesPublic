@@ -14,7 +14,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -177,6 +179,7 @@ fun Note(
                 state = pagerState
             ) { page ->
                 if (page == 0) { // Tab 1
+                    val scrollState = rememberScrollState()
                     TextField(
                         value = noteViewModel.text,
                         onValueChange = {
@@ -186,7 +189,8 @@ fun Note(
                         label = { Text("Enter Items Line by Line:") },
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(16.dp),
+                            .padding(16.dp)
+                            .verticalScroll(scrollState),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
                     )
                 } else { // Tab 2
