@@ -1,5 +1,7 @@
 package `in`.v89bhp.checkablenotes.ui.note
 
+import android.util.Log
+import android.view.ViewTreeObserver
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -40,17 +42,25 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -179,11 +189,20 @@ fun Note(
                 state = pagerState
             ) { page ->
                 if (page == 0) { // Tab 1
+
                     val scrollState = rememberScrollState()
+                    val imeState = rememberImeState()
+                    LaunchedEffect(imeState.value) {
+                        if(imeState.value) {
+                            Log.i("Note.kt", "Scroll state value: ${scrollState.value}")
+                            scrollState.scrollTo(getScrollPixel(noteViewModel.text) * 30)
+                        }
+                    }
                     TextField(
                         value = noteViewModel.text,
                         onValueChange = {
                             noteViewModel.text = it
+                            Log.i("Note.kt", "Cursor position ${it.selection.start}")
                             noteViewModel.updateList(it)
                         },
                         label = { Text("Enter Items Line by Line:") },
@@ -310,5 +329,33 @@ fun onBackPressed(
 
     }
     navigateBack()
+}
+
+@Composable
+fun rememberImeState(): State<Boolean> {
+    val imeState = remember {
+        mutableStateOf(false)
+    }
+
+    val view = LocalView.current
+    DisposableEffect(view) {
+        val listener = ViewTreeObserver.OnGlobalLayoutListener {
+            val isKeyboardOpen = ViewCompat.getRootWindowInsets(view)
+                ?.isVisible(WindowInsetsCompat.Type.ime()) ?: true
+            imeState.value = isKeyboardOpen
+        }
+
+        view.viewTreeObserver.addOnGlobalLayoutListener(listener)
+        onDispose {
+            view.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        }
+    }
+    return imeState
+}
+
+fun getScrollPixel(tfv: TextFieldValue): Int {
+    val newlineCount = tfv.text.slice(0.. tfv.selection.start).filter { it == '\n' }.count()
+    Log.i("Note.kt", "Newline count: $newlineCount")
+    return newlineCount
 }
 
