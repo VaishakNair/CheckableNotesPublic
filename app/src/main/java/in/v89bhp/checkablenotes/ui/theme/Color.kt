@@ -70,3 +70,5 @@ val seed = Color(0xFF1E9300)
 // User created colors
 val green = Color(0xFF287528)
 val light_green = Color(0xFFD4EABB)
+val red = Color(0xFFFF0000)
+val white = Color(0xFFFFFFFF)

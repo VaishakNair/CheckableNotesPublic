@@ -52,7 +52,9 @@ import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.progressbars.CircularProgress
+import `in`.v89bhp.checkablenotes.ui.theme.green
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
+import `in`.v89bhp.checkablenotes.ui.theme.white
 import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
 import kotlinx.coroutines.delay
 import java.io.File
@@ -200,6 +202,7 @@ fun NotesGrid(
                 isSelected = fileNames[index] in selectedFileNames,
                 isCABActivated = selectedFileNames.isNotEmpty(),
                 pendingItemsCount = note.list.sumOf { if (!it.isChecked) 1 as Int else 0 },
+                totalItemsCount = note.list.size,
                 lastModified = SimpleDateFormat("d MMM yyyy, h:mm a").format(
                     File(
                         LocalContext.current.filesDir,
@@ -220,6 +223,7 @@ fun NoteCard(
     isSelected: Boolean,
     isCABActivated: Boolean,
     pendingItemsCount: Int,
+    totalItemsCount: Int,
     lastModified: String,
     modifier: Modifier = Modifier
 ) {
@@ -273,21 +277,45 @@ fun NoteCard(
                             contentDescription = null,
 
                             )
-                    } else if (pendingItemsCount > 0) {
-                        Badge(
-                            modifier = Modifier
-                                .padding(5.dp)
+                    } else {
 
-                        ) {
-                            Text(
-                                pendingItemsCount.toString(),
+                        val completedItemsCount = totalItemsCount - pendingItemsCount
+                        if (completedItemsCount > 0) {
+                            Badge(
                                 modifier = Modifier
-                                    .semantics {
-                                        contentDescription =
-                                            "$pendingItemsCount pending items"
-                                    }
-                            )
+                                    .padding(5.dp),
+                                containerColor = green,
+                                contentColor = white
+
+                            ) {
+                                Text(
+                                    completedItemsCount.toString(),
+                                    modifier = Modifier
+                                        .semantics {
+                                            contentDescription =
+                                                "$completedItemsCount completed items"
+                                        }
+                                )
+                            }
                         }
+
+                        if (pendingItemsCount > 0) {
+                            Badge(
+                                modifier = Modifier
+                                    .padding(5.dp)
+
+                            ) {
+                                Text(
+                                    pendingItemsCount.toString(),
+                                    modifier = Modifier
+                                        .semantics {
+                                            contentDescription =
+                                                "$pendingItemsCount pending items"
+                                        }
+                                )
+                            }
+                        }
+
                     }
                 }
 
@@ -313,9 +341,10 @@ fun NoteCardPreview() {
         note = "Tomatodfdfdfdfdf\nPotato\nDates",
         onClick = {},
         onLongPress = {},
-        isSelected = true,
+        isSelected = false,
         isCABActivated = false,
         pendingItemsCount = 3,
+        totalItemsCount = 5,
         lastModified = "13 Jan 2023 3:01 AM",
         modifier = Modifier.padding(8.dp)
     )
