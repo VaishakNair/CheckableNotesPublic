@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,13 +22,11 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material3.Badge
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,13 +38,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
@@ -52,13 +50,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.progressbars.CircularProgress
 import `in`.v89bhp.checkablenotes.ui.theme.blue
-import `in`.v89bhp.checkablenotes.ui.theme.green
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
 import `in`.v89bhp.checkablenotes.ui.theme.white
 import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
@@ -283,58 +281,24 @@ fun NoteCard(
                             contentDescription = null,
 
                             )
-                    } else {
-
-                        val completedItemsCount = totalItemsCount - pendingItemsCount
-                        if (completedItemsCount > 0) {
-                            Badge(
-                                modifier = Modifier
-                                    .padding(5.dp),
-                                containerColor = green,
-                                contentColor = white
-
-                            ) {
-                                Text(
-                                    completedItemsCount.toString(),
-                                    modifier = Modifier
-                                        .semantics {
-                                            contentDescription =
-                                                "$completedItemsCount completed items"
-                                        }
-                                )
-                            }
-                        }
-
-                        if (pendingItemsCount > 0) {
-                            Badge(
-                                modifier = Modifier
-                                    .padding(5.dp)
-
-                            ) {
-                                Text(
-                                    pendingItemsCount.toString(),
-                                    modifier = Modifier
-                                        .semantics {
-                                            contentDescription =
-                                                "$pendingItemsCount pending items"
-                                        }
-                                )
-                            }
-                        }
-
                     }
                 }
 
             }
 
-            Text(
-                text = lastModified,
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier
-                    .padding(bottom = 8.dp, start = 8.dp)
-                    .weight(0.2f)
-
+            ItemsCount(
+                totalItemsCount - pendingItemsCount, pendingItemsCount,
+                modifier = Modifier.align(Alignment.End)
             )
+// TODO
+//            Text(
+//                text = lastModified,
+//                style = MaterialTheme.typography.labelSmall,
+//                modifier = Modifier
+//                    .padding(bottom = 8.dp, start = 8.dp)
+//                    .weight(0.2f)
+//
+//            )
         }
     }
 
@@ -390,31 +354,49 @@ fun NotesGridPreview() {
 }
 
 
+//@Preview(showBackground = true)
 @Composable
-fun CheckHint(completedItemsCount: Int, pendingItemsCount: Int) {
+fun ItemsCount(
+    completedItemsCount: Int, pendingItemsCount: Int,
+    modifier: Modifier = Modifier
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
+            .padding(end = 4.dp, bottom = 4.dp)
+            .size(60.dp, 20.dp)
             .background(color = blue, shape = CircleShape)
             .padding(start = 4.dp, end = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Checkbox(
-            modifier = Modifier.padding(0.dp),
-            checked = false,
-            colors = CheckboxDefaults.colors(uncheckedColor = white),
-            onCheckedChange = {})
-        Text(
-            text = completedItemsCount.toString(),
-            color = white
-        )
-        Checkbox(
-            modifier = Modifier.padding(start = 4.dp),
-            checked = true, onCheckedChange = {},
-            colors = CheckboxDefaults.colors(checkedColor = white, checkmarkColor = blue),)
+
+        Box(
+            modifier = Modifier
+                .size(10.dp)
+                .border(BorderStroke(1.0.dp, color = white)),
+            contentAlignment = Alignment.Center
+        ) {
+        }
+
         Text(
             text = pendingItemsCount.toString(),
             color = white,
-            modifier = Modifier.padding(end = 16.dp)
+            fontSize = 10.sp
+        )
+        Box(
+            modifier = Modifier
+                .size(10.dp)
+                .border(BorderStroke(1.0.dp, color = white))
+                .background(color = white),
+            contentAlignment = Alignment.Center
+        ) {
+
+            Icon(Icons.Default.Check, contentDescription = "", tint = blue)
+        }
+        Text(
+            text = completedItemsCount.toString(),
+            color = white,
+            fontSize = 10.sp
         )
 
     }
