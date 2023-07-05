@@ -72,6 +72,8 @@ val green = Color(0xFF287528)
 val light_green = Color(0xFFD4EABB)
 val red = Color(0xFFFF0000)
 val white = Color(0xFFFFFFFF)
+val light_white = Color(0xFFF7F4F4)
+
 val blue = Color(0xFF0A77CE)
 val light_blue = Color(0xFF70B4EC)
 val dark_grey = Color(0xFF2E3030)

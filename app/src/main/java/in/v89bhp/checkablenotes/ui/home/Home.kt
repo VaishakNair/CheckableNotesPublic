@@ -29,6 +29,7 @@ import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
@@ -63,7 +64,9 @@ import `in`.v89bhp.checkablenotes.ui.progressbars.CircularProgress
 import `in`.v89bhp.checkablenotes.ui.theme.black
 import `in`.v89bhp.checkablenotes.ui.theme.blue
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
+import `in`.v89bhp.checkablenotes.ui.theme.light_grey
 import `in`.v89bhp.checkablenotes.ui.theme.light_grey_2
+import `in`.v89bhp.checkablenotes.ui.theme.light_white
 import `in`.v89bhp.checkablenotes.ui.theme.white
 import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
 import kotlinx.coroutines.delay
@@ -86,13 +89,18 @@ fun Home(
     }
 
     Scaffold(
+        floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = if (homeViewModel.selectedFileNames.isEmpty()) {
             {
                 LargeFloatingActionButton(
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer, // This is not needed and is automatically set to this value by the system.
+                    shape = CircleShape,
+                    containerColor = light_white,
+                    contentColor = black,
                     onClick = { navigateToNote("${System.currentTimeMillis()}.json") }) {
-                    Icon(Icons.Filled.Add, "New note")
+                    Icon(
+                        imageVector = Icons.Filled.Add, contentDescription = "New note",
+                        modifier = Modifier.size(60.dp)
+                    )
                 }
             }
         } else {
@@ -266,7 +274,7 @@ fun NoteCard(
         ) {
 
             // Title:
-            if(title.isNotEmpty()) {
+            if (title.isNotEmpty()) {
                 Text(
                     text = title,
                     maxLines = 1,
@@ -315,9 +323,10 @@ fun NoteCard(
             // Blue checked/ pending items count row at bottom:
             ItemsCount(
                 totalItemsCount - pendingItemsCount, pendingItemsCount,
-                modifier = Modifier.align(Alignment.End,
+                modifier = Modifier.align(
+                    Alignment.End,
                 ),
-                backgroundColor = if(isSelected) light_grey_2 else blue
+                backgroundColor = if (isSelected) light_grey_2 else blue
             )
 // TODO
 //            Text(
