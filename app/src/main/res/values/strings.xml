@@ -12,4 +12,7 @@
     <string name="share_note">Share note</string>
     <string name="no_notes">No notes. Click the + icon to get started.</string>
     <string name="loading">Loading…</string>
+    <string name="no_items">No items.</string>
+    <string name="title">Title</string>
+    <string name="enter_items_line_by_line">Enter items line by line</string>
 </resources>

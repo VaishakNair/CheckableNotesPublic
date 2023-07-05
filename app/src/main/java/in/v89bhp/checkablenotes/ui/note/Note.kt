@@ -53,7 +53,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
@@ -71,9 +70,7 @@ import `in`.v89bhp.checkablenotes.ui.home.ItemsCount
 import `in`.v89bhp.checkablenotes.ui.theme.black
 import `in`.v89bhp.checkablenotes.ui.theme.blue
 import `in`.v89bhp.checkablenotes.ui.theme.dark_grey
-import `in`.v89bhp.checkablenotes.ui.theme.green
 import `in`.v89bhp.checkablenotes.ui.theme.light_blue
-import `in`.v89bhp.checkablenotes.ui.theme.light_green
 import `in`.v89bhp.checkablenotes.ui.theme.light_grey
 import `in`.v89bhp.checkablenotes.ui.theme.white
 import kotlinx.coroutines.launch
@@ -283,7 +280,7 @@ fun NoteTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) {
             Log.i("Note.kt", "Cursor position ${it.selection.start}")
             noteViewModel.updateList(it)
         },
-        placeholder = { Text("Enter Items Line by Line") },
+        placeholder = { Text(text = stringResource(R.string.enter_items_line_by_line)) },
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
@@ -308,7 +305,7 @@ fun TitleTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) 
             noteViewModel.title = it
 
         },
-        placeholder = { Text("Title") },
+        placeholder = { Text(text = stringResource(R.string.title)) },
         modifier = modifier
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             .fillMaxWidth(),
@@ -329,17 +326,23 @@ fun CheckableList(
     onCheckedChange: (CheckableItem, newValue: Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-    ) {
-        items(checkableItems,
-            key = { it.id }) { checkableItem ->
-            ItemCard(
-                checkableItem = checkableItem,
-                onCheckedChange = { newValue -> onCheckedChange(checkableItem, newValue) },
-                modifier = Modifier.animateItemPlacement()
-            )
+    if (checkableItems.isEmpty()) {
+        Text(text = stringResource(R.string.no_items),
+        modifier = modifier)
+    } else {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = modifier
+        ) {
+
+            items(checkableItems,
+                key = { it.id }) { checkableItem ->
+                ItemCard(
+                    checkableItem = checkableItem,
+                    onCheckedChange = { newValue -> onCheckedChange(checkableItem, newValue) },
+                    modifier = Modifier.animateItemPlacement()
+                )
+            }
         }
     }
 }
