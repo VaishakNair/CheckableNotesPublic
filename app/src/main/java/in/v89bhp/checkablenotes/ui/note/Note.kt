@@ -129,7 +129,6 @@ fun Note(
                         contentDescription = stringResource(R.string.delete_note)
                     )
                 }
-                val context = LocalContext.current
                 IconButton(onClick = { noteViewModel.showSharesheet(context) }) {
                     Icon(
                         imageVector = Icons.Filled.Share,
