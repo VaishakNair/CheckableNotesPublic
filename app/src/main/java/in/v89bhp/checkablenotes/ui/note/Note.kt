@@ -26,22 +26,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Badge
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
@@ -54,18 +52,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -76,7 +70,9 @@ import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.nameischeckedequals
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
+import `in`.v89bhp.checkablenotes.ui.theme.blue
 import `in`.v89bhp.checkablenotes.ui.theme.green
+import `in`.v89bhp.checkablenotes.ui.theme.dark_grey
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
 import `in`.v89bhp.checkablenotes.ui.theme.white
 import kotlinx.coroutines.launch
@@ -165,63 +161,85 @@ fun Note(
             keyboardController?.hide()
         }
         Column(modifier = modifier.padding(contentPadding)) {
-            TabRow(selectedTabIndex = pagerState.currentPage) {
+
+            Row(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 titles.forEachIndexed { index, title ->
-                    Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                        },
-                        text = {
-
-                            Column {
-                                if (index == 1) {
-                                    Row(
-                                        modifier = Modifier.align(Alignment.End),
-                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                                    ) {
-                                        if (noteViewModel.completedItemsCount > 0) {
-                                            Badge(
-                                                containerColor = green,
-                                                contentColor = white
-                                            ) {
-
-                                                Text(
-                                                    text = (noteViewModel.completedItemsCount).toString(),
-                                                    modifier = Modifier.semantics {
-                                                        contentDescription =
-                                                            "${noteViewModel.completedItemsCount} completed items"
-                                                    }
-
-                                                )
-                                            }
-                                        }
-                                        if (noteViewModel.pendingItemsCount > 0) {
-                                            Badge() {
-                                                Text(
-                                                    text = noteViewModel.pendingItemsCount.toString(),
-                                                    modifier = Modifier.semantics {
-                                                        contentDescription =
-                                                            "${noteViewModel.pendingItemsCount} pending items"
-                                                    }
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                                Text(
-                                    text = title,
-                                    maxLines = 2,
-                                    overflow = TextOverflow.Ellipsis,
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                            }
-
-
-                        }
-                    )
+                    FilledTonalButton(
+                        onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+                        colors = ButtonDefaults.filledTonalButtonColors(
+                            contentColor = white,
+                            containerColor = if (pagerState.currentPage == index) blue else dark_grey
+                        )
+                    ) {
+                        Text(text = title)
+                    }
                 }
+
+
             }
+
+//            TabRow(selectedTabIndex = pagerState.currentPage) {
+//                titles.forEachIndexed { index, title ->
+//                    Tab(
+//                        selected = pagerState.currentPage == index,
+//                        onClick = {
+//                            coroutineScope.launch { pagerState.animateScrollToPage(index) }
+//                        },
+//                        text = {
+//
+//                            Column {
+//                                if (index == 1) {
+//                                    Row(
+//                                        modifier = Modifier.align(Alignment.End),
+//                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+//                                    ) {
+//                                        if (noteViewModel.completedItemsCount > 0) {
+//                                            Badge(
+//                                                containerColor = green,
+//                                                contentColor = white
+//                                            ) {
+//
+//                                                Text(
+//                                                    text = (noteViewModel.completedItemsCount).toString(),
+//                                                    modifier = Modifier.semantics {
+//                                                        contentDescription =
+//                                                            "${noteViewModel.completedItemsCount} completed items"
+//                                                    }
+//
+//                                                )
+//                                            }
+//                                        }
+//                                        if (noteViewModel.pendingItemsCount > 0) {
+//                                            Badge() {
+//                                                Text(
+//                                                    text = noteViewModel.pendingItemsCount.toString(),
+//                                                    modifier = Modifier.semantics {
+//                                                        contentDescription =
+//                                                            "${noteViewModel.pendingItemsCount} pending items"
+//                                                    }
+//                                                )
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                                Text(
+//                                    text = title,
+//                                    maxLines = 2,
+//                                    overflow = TextOverflow.Ellipsis,
+//                                    style = MaterialTheme.typography.bodyLarge
+//                                )
+//                            }
+//
+//
+//                        }
+//                    )
+//                }
+//            }
 
             HorizontalPager(
                 pageCount = titles.size,
@@ -328,9 +346,7 @@ fun TitleTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) 
         placeholder = { Text("Title") },
         modifier = modifier
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-            .fillMaxWidth()
-
-        ,
+            .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
         colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = white)
