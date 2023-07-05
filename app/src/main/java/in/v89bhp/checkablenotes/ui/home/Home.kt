@@ -41,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -64,6 +63,7 @@ import `in`.v89bhp.checkablenotes.ui.progressbars.CircularProgress
 import `in`.v89bhp.checkablenotes.ui.theme.black
 import `in`.v89bhp.checkablenotes.ui.theme.blue
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
+import `in`.v89bhp.checkablenotes.ui.theme.light_grey_2
 import `in`.v89bhp.checkablenotes.ui.theme.white
 import `in`.v89bhp.checkablenotes.ui.topappbars.ContextualTopAppBar
 import kotlinx.coroutines.delay
@@ -315,7 +315,9 @@ fun NoteCard(
             // Blue checked/ pending items count row at bottom:
             ItemsCount(
                 totalItemsCount - pendingItemsCount, pendingItemsCount,
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.End,
+                ),
+                backgroundColor = if(isSelected) light_grey_2 else blue
             )
 // TODO
 //            Text(
