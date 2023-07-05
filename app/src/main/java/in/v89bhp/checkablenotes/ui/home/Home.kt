@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -38,6 +39,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -373,7 +376,8 @@ fun ItemsCount(
         Box(
             modifier = Modifier
                 .size(10.dp)
-                .border(BorderStroke(1.0.dp, color = white)),
+                .clip(RoundedCornerShape(2.dp))
+                .border(border = BorderStroke(1.0.dp, color = white)),
             contentAlignment = Alignment.Center
         ) {
         }
@@ -386,6 +390,7 @@ fun ItemsCount(
         Box(
             modifier = Modifier
                 .size(10.dp)
+                .clip(RoundedCornerShape(2.dp))
                 .border(BorderStroke(1.0.dp, color = white))
                 .background(color = white),
             contentAlignment = Alignment.Center
