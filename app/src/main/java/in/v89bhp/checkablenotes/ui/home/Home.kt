@@ -41,6 +41,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
@@ -63,6 +64,7 @@ import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.progressbars.CircularProgress
 import `in`.v89bhp.checkablenotes.ui.theme.black
 import `in`.v89bhp.checkablenotes.ui.theme.blue
+import `in`.v89bhp.checkablenotes.ui.theme.light_blue
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
 import `in`.v89bhp.checkablenotes.ui.theme.light_grey
 import `in`.v89bhp.checkablenotes.ui.theme.light_grey_2
@@ -142,7 +144,10 @@ fun Home(
             )
         }
     ) { contentPadding ->
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
 
             if (homeViewModel.isLoadingNotes) {
                 CircularProgress(text = stringResource(R.string.loading))
