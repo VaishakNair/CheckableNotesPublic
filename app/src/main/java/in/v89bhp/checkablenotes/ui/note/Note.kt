@@ -300,7 +300,7 @@ fun NoteTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) {
             noteViewModel.updateList(it)
         },
         label = { Text("Enter Items Line by Line:") },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
             .verticalScroll(scrollState)
@@ -320,7 +320,7 @@ fun TitleTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) 
 
         },
         label = { Text("Title:") },
-        modifier = Modifier
+        modifier = modifier
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             .fillMaxWidth(),
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
