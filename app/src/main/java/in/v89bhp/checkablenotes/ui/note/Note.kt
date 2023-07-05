@@ -41,7 +41,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -51,6 +51,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -273,9 +274,10 @@ fun NoteTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) {
     val imeState = rememberImeState()
     val textStyle = LocalTextStyle.current
     val context = LocalContext.current
+    var isFocused by remember { mutableStateOf(false) }
 
     LaunchedEffect(imeState.value) {
-        if (imeState.value) {
+        if (imeState.value && isFocused) { // Keyboard is opened and note text field has focus:
             val newlineCount = getNewlineCount(noteViewModel.text)
             if (newlineCount > 2) {
                 scrollState.scrollTo(
@@ -302,7 +304,8 @@ fun NoteTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(scrollState),
+            .verticalScroll(scrollState)
+            .onFocusChanged { isFocused = it.isFocused },
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
     )
 }
@@ -320,7 +323,6 @@ fun TitleTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) 
         label = { Text("Title:") },
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-
             .fillMaxWidth(),
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
     )
