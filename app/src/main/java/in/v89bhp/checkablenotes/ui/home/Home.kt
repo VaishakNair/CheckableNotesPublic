@@ -261,15 +261,17 @@ fun NoteCard(
         ) {
 
             // Title:
-            Text(
-                text = title,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .padding(start = 8.dp, top = 8.dp),
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
-            )
+            if(title.isNotEmpty()) {
+                Text(
+                    text = title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 8.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
             // Note summary and CAB selection button:
             Row(
@@ -351,7 +353,8 @@ fun ScaffoldPreview() {
 @Composable
 fun NotesGridPreview() {
     val notes = listOf(
-        Note(TextFieldValue(text = "Alphabets"),
+        Note(
+            TextFieldValue(text = "Alphabets"),
             TextFieldValue(text = "a\nb\nc"), listOf(
                 CheckableItem(0, "a", true),
                 CheckableItem(1, "b", false),
