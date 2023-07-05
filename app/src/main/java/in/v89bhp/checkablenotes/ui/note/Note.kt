@@ -6,7 +6,9 @@ import android.util.TypedValue
 import android.view.ViewTreeObserver
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -193,21 +195,32 @@ fun Note(
                 pageCount = titles.size,
                 state = pagerState
             ) { page ->
-                if (page == 0) { // Tab 1
-                    Column() {
+                if (page == 0) { // Note tab
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .background(color = light_grey, shape = RoundedCornerShape(16.dp))
+                    ) {
+
                         TitleTextField(noteViewModel = noteViewModel)
                         NoteTextField(noteViewModel = noteViewModel)
                     }
 
 
-                } else { // Tab 2
-                    CheckableList(checkableItems = noteViewModel.list,
+                } else { // Checkable list tab
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        onCheckedChange = { checkableItem, newValue ->
-                            noteViewModel.onCheckedChange(checkableItem, newValue)
-                        })
+                            .padding(16.dp)
+                            .background(color = light_grey, shape = RoundedCornerShape(16.dp))
+                    ) {
+                        CheckableList(checkableItems = noteViewModel.list,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            onCheckedChange = { checkableItem, newValue ->
+                                noteViewModel.onCheckedChange(checkableItem, newValue)
+                            })
+                    }
                 }
             }
 
