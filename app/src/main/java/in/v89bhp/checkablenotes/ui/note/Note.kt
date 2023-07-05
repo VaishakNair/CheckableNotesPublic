@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -35,11 +36,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.runtime.DisposableEffect
@@ -51,6 +54,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -292,38 +296,44 @@ fun NoteTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) {
             }
         }
     }
-    TextField(
+    OutlinedTextField(
         value = noteViewModel.text,
         onValueChange = {
             noteViewModel.text = it
             Log.i("Note.kt", "Cursor position ${it.selection.start}")
             noteViewModel.updateList(it)
         },
-        label = { Text("Enter Items Line by Line:") },
+        placeholder = { Text("Enter Items Line by Line") },
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
             .verticalScroll(scrollState)
             .onFocusChanged { isFocused = it.isFocused },
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+        shape = RoundedCornerShape(16.dp),
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+        colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = white)
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TitleTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) {
-    TextField(
+    OutlinedTextField(
         maxLines = 1,
         value = noteViewModel.title,
         onValueChange = {
             noteViewModel.title = it
 
         },
-        label = { Text("Title:") },
+        placeholder = { Text("Title") },
         modifier = modifier
             .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-            .fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+            .fillMaxWidth()
+
+        ,
+        shape = RoundedCornerShape(16.dp),
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+        colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = white)
     )
 }
 
