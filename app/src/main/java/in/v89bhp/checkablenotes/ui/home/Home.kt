@@ -61,6 +61,7 @@ import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.progressbars.CircularProgress
+import `in`.v89bhp.checkablenotes.ui.theme.black
 import `in`.v89bhp.checkablenotes.ui.theme.blue
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
 import `in`.v89bhp.checkablenotes.ui.theme.white
@@ -254,7 +255,8 @@ fun NoteCard(
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer
             else if (pendingItemsCount == 0) light_green
-            else MaterialTheme.colorScheme.surfaceVariant
+            else MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = black
         )
     )
     {

@@ -12,13 +12,13 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val LightColors = lightColorScheme(
-    primary = md_theme_light_primary,
-    onPrimary = md_theme_light_onPrimary,
+    primary = black,
+    onPrimary = white,
     primaryContainer = md_theme_light_primaryContainer,
     onPrimaryContainer = md_theme_light_onPrimaryContainer,
     secondary = md_theme_light_secondary,
     onSecondary = md_theme_light_onSecondary,
-    secondaryContainer = md_theme_light_secondaryContainer,
+    secondaryContainer = light_grey,
     onSecondaryContainer = md_theme_light_onSecondaryContainer,
     tertiary = md_theme_light_tertiary,
     onTertiary = md_theme_light_onTertiary,
@@ -30,7 +30,7 @@ private val LightColors = lightColorScheme(
     onErrorContainer = md_theme_light_onErrorContainer,
     background = black,
     onBackground = md_theme_light_onBackground,
-    surface = black,
+    surface = black, // Top app bar background
     onSurface = white,
     surfaceVariant = white,
     onSurfaceVariant = md_theme_light_onSurfaceVariant,
