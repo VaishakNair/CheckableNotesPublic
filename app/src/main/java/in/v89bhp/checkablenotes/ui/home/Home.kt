@@ -110,7 +110,8 @@ fun Home(
                     IconButton(onClick = { homeViewModel.openDeleteDialog = true }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
-                            contentDescription = stringResource(R.string.delete)
+                            contentDescription = stringResource(R.string.delete),
+                            tint = white
                         )
                     }
 
@@ -123,7 +124,8 @@ fun Home(
                     }) {
                         Icon(
                             painter = painterResource(id = if (homeViewModel.allSelected) R.drawable.baseline_deselect_24 else R.drawable.baseline_select_all_24),
-                            contentDescription = stringResource(if (homeViewModel.allSelected) R.string.deselect_all else R.string.select_all)
+                            contentDescription = stringResource(if (homeViewModel.allSelected) R.string.deselect_all else R.string.select_all),
+                            tint = white
                         )
                     }
                 },

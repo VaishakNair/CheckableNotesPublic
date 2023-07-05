@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
@@ -65,6 +66,7 @@ import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.nameischeckedequals
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.home.ItemsCount
+import `in`.v89bhp.checkablenotes.ui.theme.black
 import `in`.v89bhp.checkablenotes.ui.theme.blue
 import `in`.v89bhp.checkablenotes.ui.theme.dark_grey
 import `in`.v89bhp.checkablenotes.ui.theme.green
@@ -122,13 +124,15 @@ fun Note(
                 IconButton(onClick = { noteViewModel.openDeleteDialog = true }) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = stringResource(R.string.delete_note)
+                        contentDescription = stringResource(R.string.delete_note),
+                        tint = white
                     )
                 }
                 IconButton(onClick = { noteViewModel.showSharesheet(context) }) {
                     Icon(
                         imageVector = Icons.Filled.Share,
-                        contentDescription = stringResource(R.string.share_note)
+                        contentDescription = stringResource(R.string.share_note),
+                        tint = white
                     )
                 }
             },
@@ -273,7 +277,10 @@ fun NoteTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) {
             .onFocusChanged { isFocused = it.isFocused },
         shape = RoundedCornerShape(16.dp),
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-        colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = white)
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            containerColor = white,
+            textColor = black
+        )
     )
 }
 
@@ -293,7 +300,10 @@ fun TitleTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) 
             .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-        colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = white)
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            containerColor = white,
+            textColor = black
+        )
     )
 }
 
