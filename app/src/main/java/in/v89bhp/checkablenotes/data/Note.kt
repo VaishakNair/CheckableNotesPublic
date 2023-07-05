@@ -5,4 +5,4 @@ import androidx.compose.ui.text.input.TextFieldValue
 
 
 @Immutable
-data class Note(val text: TextFieldValue, val list: List<CheckableItem>)
+data class Note(val title: TextFieldValue, val text: TextFieldValue, val list: List<CheckableItem>)

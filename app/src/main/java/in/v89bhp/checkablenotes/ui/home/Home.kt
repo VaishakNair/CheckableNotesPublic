@@ -333,7 +333,7 @@ fun ScaffoldPreview() {
 @Composable
 fun NotesGridPreview() {
     val notes = listOf(
-        Note(
+        Note(TextFieldValue(text = "Alphabets"),
             TextFieldValue(text = "a\nb\nc"), listOf(
                 CheckableItem(0, "a", true),
                 CheckableItem(1, "b", false),
@@ -341,6 +341,7 @@ fun NotesGridPreview() {
             )
         ),
         Note(
+            TextFieldValue(text = "Alphabets (set 2)"),
             TextFieldValue(text = "g\nh\ni"), listOf(
                 CheckableItem(0, "g", false),
                 CheckableItem(1, "h", false),

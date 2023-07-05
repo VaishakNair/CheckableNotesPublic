@@ -5,4 +5,4 @@ import androidx.compose.ui.text.input.TextFieldValue
 
 
 @Immutable
-data class SerializableNote(val text: TextFieldValue, val list: List<SerializableCheckableItem>)
+data class SerializableNote(val title: TextFieldValue, val text: TextFieldValue, val list: List<SerializableCheckableItem>)

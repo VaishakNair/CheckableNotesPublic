@@ -36,6 +36,7 @@ class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
             Gson().fromJson(jsonObjectString, SerializableNote::class.java)
                 .let { serializableNote ->
                     Note(
+                        title = serializableNote.title,
                         text = serializableNote.text,
                         list = serializableNote.list.map { serializableCheckableItem ->
                             CheckableItem(
@@ -50,6 +51,7 @@ class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
 
     suspend fun saveNote(context: Context, note: Note, fileName: String) {
         val serializableNote = SerializableNote(
+            title = note.title,
             text = note.text,
             list = note.list.map { checkableItem ->
                 SerializableCheckableItem(

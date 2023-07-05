@@ -49,6 +49,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 loadedNote = notesRepository.loadNote(getApplication(), fileName)
+                title = loadedNote!!.title
                 text = loadedNote!!.text
                 list.clear()
                 list.addAll(loadedNote!!.list.map {
@@ -160,13 +161,13 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         context.startActivity(Intent.createChooser(sendIntent, null))
     }
 
-    fun saveNote(fileName: String, text: TextFieldValue, list: List<CheckableItem>) {
+    fun saveNote(fileName: String, title: TextFieldValue, text: TextFieldValue, list: List<CheckableItem>) {
         Log.i("HomeViewModel", "Saving note: ${text.text}")
         viewModelScope.launch {
 
             notesRepository.saveNote(
                 context = getApplication(),
-                note = Note(text = text, list = list),
+                note = Note(title = title, text = text, list = list),
                 fileName = fileName
             )
         }
