@@ -228,41 +228,8 @@ fun Note(
             ) { page ->
                 if (page == 0) { // Tab 1
 
-                    val scrollState = rememberScrollState()
-                    val imeState = rememberImeState()
-                    val textStyle = LocalTextStyle.current
-
-                    LaunchedEffect(imeState.value) {
-                        if (imeState.value) {
-                            val newlineCount = getNewlineCount(noteViewModel.text)
-                            if (newlineCount > 2) {
-                                scrollState.scrollTo(
-                                    newlineCount *
-                                            getFontSizeInPixels(
-                                                textStyle.fontSize.value,
-                                                context
-                                            ).toInt()
-                                )
-                                Log.i("Note.kt", "Scroll state value: ${scrollState.value}")
-                            } else {
-                                scrollState.scrollTo(0)
-                            }
-                        }
-                    }
-                    TextField(
-                        value = noteViewModel.text,
-                        onValueChange = {
-                            noteViewModel.text = it
-                            Log.i("Note.kt", "Cursor position ${it.selection.start}")
-                            noteViewModel.updateList(it)
-                        },
-                        label = { Text("Enter Items Line by Line:") },
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp)
-                            .verticalScroll(scrollState),
-                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
-                    )
+                    NoteTextField(noteViewModel = noteViewModel)
+                  
                 } else { // Tab 2
                     CheckableList(checkableItems = noteViewModel.list,
                         modifier = Modifier
@@ -297,6 +264,47 @@ fun Note(
                 })
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NoteTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) {
+    val scrollState = rememberScrollState()
+    val imeState = rememberImeState()
+    val textStyle = LocalTextStyle.current
+    val context = LocalContext.current
+
+    LaunchedEffect(imeState.value) {
+        if (imeState.value) {
+            val newlineCount = getNewlineCount(noteViewModel.text)
+            if (newlineCount > 2) {
+                scrollState.scrollTo(
+                    newlineCount *
+                            getFontSizeInPixels(
+                                textStyle.fontSize.value,
+                                context
+                            ).toInt()
+                )
+                Log.i("Note.kt", "Scroll state value: ${scrollState.value}")
+            } else {
+                scrollState.scrollTo(0)
+            }
+        }
+    }
+    TextField(
+        value = noteViewModel.text,
+        onValueChange = {
+            noteViewModel.text = it
+            Log.i("Note.kt", "Cursor position ${it.selection.start}")
+            noteViewModel.updateList(it)
+        },
+        label = { Text("Enter Items Line by Line:") },
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(scrollState),
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
