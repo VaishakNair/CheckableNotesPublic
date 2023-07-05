@@ -387,7 +387,7 @@ fun onBackPressed(
     noteViewModel: NoteViewModel,
     navigateBack: () -> Unit
 ) {
-    if (noteViewModel.text.text.trim() == "") {// Note is empty. Delete the existing note (if any)
+    if (noteViewModel.text.text.trim() == "" && noteViewModel.title.text.trim() == "") {// Note doesn't have title or content. Delete the existing note (if any)
         noteViewModel.deleteNotes(listOf(fileName))
     } else {
         noteViewModel.loadedNote?.let { loadedNote -> // Not a new note:
