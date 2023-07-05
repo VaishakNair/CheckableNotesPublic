@@ -72,6 +72,7 @@ import `in`.v89bhp.checkablenotes.ui.theme.black
 import `in`.v89bhp.checkablenotes.ui.theme.blue
 import `in`.v89bhp.checkablenotes.ui.theme.dark_grey
 import `in`.v89bhp.checkablenotes.ui.theme.green
+import `in`.v89bhp.checkablenotes.ui.theme.light_blue
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
 import `in`.v89bhp.checkablenotes.ui.theme.light_grey
 import `in`.v89bhp.checkablenotes.ui.theme.white
@@ -353,7 +354,7 @@ fun ItemCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (checkableItem.isChecked) light_green
+            containerColor = if (checkableItem.isChecked) light_blue
             else MaterialTheme.colorScheme.surfaceVariant
         )
 
@@ -366,7 +367,7 @@ fun ItemCard(
             Checkbox(
                 checked = checkableItem.isChecked,
                 onCheckedChange = onCheckedChange,
-                colors = CheckboxDefaults.colors(checkedColor = green)
+                colors = CheckboxDefaults.colors(checkedColor = black)
             )
             Spacer(Modifier.width(10.dp))
             Text(

@@ -81,11 +81,13 @@ fun CheckableNotesTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) {
-        DarkColors
-    } else {
-        LightColors
-    }
+//    val colorScheme = if (darkTheme) {
+//        DarkColors
+//    } else {
+//        LightColors
+//    }
+
+    val colorScheme = LightColors
 
     val view = LocalView.current
     if (!view.isInEditMode) {
