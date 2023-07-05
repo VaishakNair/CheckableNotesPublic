@@ -40,6 +40,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
@@ -383,13 +384,14 @@ fun NotesGridPreview() {
 @Composable
 fun ItemsCount(
     completedItemsCount: Int, pendingItemsCount: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = blue,
 ) {
     Row(
         modifier = modifier
             .padding(end = 4.dp, bottom = 4.dp)
             .size(60.dp, 20.dp)
-            .background(color = blue, shape = CircleShape)
+            .background(color = backgroundColor, shape = CircleShape)
             .padding(start = 4.dp, end = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly

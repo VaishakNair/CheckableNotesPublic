@@ -43,12 +43,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -70,10 +64,12 @@ import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.nameischeckedequals
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
+import `in`.v89bhp.checkablenotes.ui.home.ItemsCount
 import `in`.v89bhp.checkablenotes.ui.theme.blue
-import `in`.v89bhp.checkablenotes.ui.theme.green
 import `in`.v89bhp.checkablenotes.ui.theme.dark_grey
+import `in`.v89bhp.checkablenotes.ui.theme.green
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
+import `in`.v89bhp.checkablenotes.ui.theme.light_grey
 import `in`.v89bhp.checkablenotes.ui.theme.white
 import kotlinx.coroutines.launch
 
@@ -180,66 +176,14 @@ fun Note(
                     }
                 }
 
+                ItemsCount(
+                    completedItemsCount = noteViewModel.completedItemsCount,
+                    pendingItemsCount = noteViewModel.pendingItemsCount,
+                    backgroundColor = light_grey
+                )
+
 
             }
-
-//            TabRow(selectedTabIndex = pagerState.currentPage) {
-//                titles.forEachIndexed { index, title ->
-//                    Tab(
-//                        selected = pagerState.currentPage == index,
-//                        onClick = {
-//                            coroutineScope.launch { pagerState.animateScrollToPage(index) }
-//                        },
-//                        text = {
-//
-//                            Column {
-//                                if (index == 1) {
-//                                    Row(
-//                                        modifier = Modifier.align(Alignment.End),
-//                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-//                                    ) {
-//                                        if (noteViewModel.completedItemsCount > 0) {
-//                                            Badge(
-//                                                containerColor = green,
-//                                                contentColor = white
-//                                            ) {
-//
-//                                                Text(
-//                                                    text = (noteViewModel.completedItemsCount).toString(),
-//                                                    modifier = Modifier.semantics {
-//                                                        contentDescription =
-//                                                            "${noteViewModel.completedItemsCount} completed items"
-//                                                    }
-//
-//                                                )
-//                                            }
-//                                        }
-//                                        if (noteViewModel.pendingItemsCount > 0) {
-//                                            Badge() {
-//                                                Text(
-//                                                    text = noteViewModel.pendingItemsCount.toString(),
-//                                                    modifier = Modifier.semantics {
-//                                                        contentDescription =
-//                                                            "${noteViewModel.pendingItemsCount} pending items"
-//                                                    }
-//                                                )
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                                Text(
-//                                    text = title,
-//                                    maxLines = 2,
-//                                    overflow = TextOverflow.Ellipsis,
-//                                    style = MaterialTheme.typography.bodyLarge
-//                                )
-//                            }
-//
-//
-//                        }
-//                    )
-//                }
-//            }
 
             HorizontalPager(
                 pageCount = titles.size,
