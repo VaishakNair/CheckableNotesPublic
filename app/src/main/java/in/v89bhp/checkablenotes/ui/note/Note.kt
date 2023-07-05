@@ -367,7 +367,7 @@ fun ItemCard(
             Checkbox(
                 checked = checkableItem.isChecked,
                 onCheckedChange = onCheckedChange,
-                colors = CheckboxDefaults.colors(checkedColor = black)
+                colors = CheckboxDefaults.colors(checkedColor = black, checkmarkColor = light_blue)
             )
             Spacer(Modifier.width(10.dp))
             Text(
