@@ -48,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -195,6 +196,7 @@ fun NotesGrid(
     ) {
         itemsIndexed(notes) { index, note ->
             NoteCard(
+                title = note.title.text,
                 note = note.text.text,
                 onClick = {
                     if (fileNames[index] in selectedFileNames) {// The card has been selected by a long press. De-select it
@@ -224,6 +226,7 @@ fun NotesGrid(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteCard(
+    title: String,
     note: String,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
@@ -237,7 +240,7 @@ fun NoteCard(
 
     Card(
         modifier = modifier
-            .size(width = 110.dp, height = 110.dp)
+            .size(width = 110.dp, height = 120.dp)
             .semantics { selected = isSelected }
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -256,6 +259,19 @@ fun NoteCard(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
+
+            // Title:
+            Text(
+                text = title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .padding(start = 8.dp, top = 8.dp),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+
+            // Note summary and CAB selection button:
             Row(
                 modifier = Modifier
                     .padding(8.dp)
@@ -289,6 +305,7 @@ fun NoteCard(
 
             }
 
+            // Blue checked/ pending items count row at bottom:
             ItemsCount(
                 totalItemsCount - pendingItemsCount, pendingItemsCount,
                 modifier = Modifier.align(Alignment.End)
@@ -311,6 +328,7 @@ fun NoteCard(
 @Composable
 fun NoteCardPreview() {
     NoteCard(
+        title = "Title 1",
         note = "Tomatodfdfdfdfdf\nPotato\nDates",
         onClick = {},
         onLongPress = {},
