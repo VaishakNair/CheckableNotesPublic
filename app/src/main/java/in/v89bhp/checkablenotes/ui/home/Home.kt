@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -193,6 +194,11 @@ fun Home(
         }
     }
 
+    if(homeViewModel.selectedFileNames.isNotEmpty()) {
+        BackHandler {
+            homeViewModel.selectedFileNames.clear()
+        }
+    }
 
 }
 
