@@ -365,14 +365,14 @@ fun ItemCard(
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(4.dp)
         ) {
             Checkbox(
                 checked = checkableItem.isChecked,
                 onCheckedChange = onCheckedChange,
                 colors = CheckboxDefaults.colors(checkedColor = black, checkmarkColor = light_blue)
             )
-            Spacer(Modifier.width(10.dp))
+
             Text(
                 checkableItem.name,
                 style = MaterialTheme.typography.bodyLarge
