@@ -49,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -72,6 +73,7 @@ import `in`.v89bhp.checkablenotes.ui.theme.blue
 import `in`.v89bhp.checkablenotes.ui.theme.dark_grey
 import `in`.v89bhp.checkablenotes.ui.theme.light_blue
 import `in`.v89bhp.checkablenotes.ui.theme.light_grey
+import `in`.v89bhp.checkablenotes.ui.theme.light_grey_2
 import `in`.v89bhp.checkablenotes.ui.theme.white
 import kotlinx.coroutines.launch
 
@@ -160,7 +162,11 @@ fun Note(
         if (pagerState.currentPage == 1) {
             keyboardController?.hide()
         }
-        Column(modifier = modifier.padding(contentPadding)) {
+        Column(
+            modifier = modifier
+                .padding(contentPadding)
+                .background(Brush.verticalGradient(listOf(black, light_grey_2)))
+        ) {
 
             Row(
                 modifier = Modifier
@@ -327,8 +333,10 @@ fun CheckableList(
     modifier: Modifier = Modifier
 ) {
     if (checkableItems.isEmpty()) {
-        Text(text = stringResource(R.string.no_items),
-        modifier = modifier)
+        Text(
+            text = stringResource(R.string.no_items),
+            modifier = modifier
+        )
     } else {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),

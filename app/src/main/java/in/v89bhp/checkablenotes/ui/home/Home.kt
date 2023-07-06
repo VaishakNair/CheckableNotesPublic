@@ -147,6 +147,7 @@ fun Home(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .background(brush = Brush.verticalGradient(listOf(black, light_grey_2)))
         ) {
 
             if (homeViewModel.isLoadingNotes) {
