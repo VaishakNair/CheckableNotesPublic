@@ -65,9 +65,7 @@ import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.progressbars.CircularProgress
 import `in`.v89bhp.checkablenotes.ui.theme.black
 import `in`.v89bhp.checkablenotes.ui.theme.blue
-import `in`.v89bhp.checkablenotes.ui.theme.light_blue
 import `in`.v89bhp.checkablenotes.ui.theme.light_green
-import `in`.v89bhp.checkablenotes.ui.theme.light_grey
 import `in`.v89bhp.checkablenotes.ui.theme.light_grey_2
 import `in`.v89bhp.checkablenotes.ui.theme.light_white
 import `in`.v89bhp.checkablenotes.ui.theme.white
