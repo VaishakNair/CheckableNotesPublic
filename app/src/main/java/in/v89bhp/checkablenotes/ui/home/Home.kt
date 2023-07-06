@@ -95,15 +95,23 @@ fun Home(
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = if (homeViewModel.selectedFileNames.isEmpty()) {
             {
-                LargeFloatingActionButton(
-                    shape = CircleShape,
-                    containerColor = light_white,
-                    contentColor = black,
-                    onClick = { navigateToNote("${System.currentTimeMillis()}.json") }) {
-                    Icon(
-                        imageVector = Icons.Filled.Add, contentDescription = "New note",
-                        modifier = Modifier.size(60.dp)
-                    )
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(110.dp)
+                        .background(color = black)
+                        .padding(20.dp)
+                ) {
+                    LargeFloatingActionButton(
+                        shape = CircleShape,
+                        containerColor = light_white,
+                        contentColor = black,
+                        onClick = { navigateToNote("${System.currentTimeMillis()}.json") }) {
+                        Icon(
+                            imageVector = Icons.Filled.Add, contentDescription = "New note",
+                            modifier = Modifier.size(60.dp)
+                        )
+                    }
                 }
             }
         } else {
@@ -194,7 +202,7 @@ fun Home(
         }
     }
 
-    if(homeViewModel.selectedFileNames.isNotEmpty()) {
+    if (homeViewModel.selectedFileNames.isNotEmpty()) {
         BackHandler {
             homeViewModel.selectedFileNames.clear()
         }
