@@ -103,6 +103,6 @@ fun CheckableNotesTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         content = content,
-//        typography = typography
+        typography = typography
     )
 }
