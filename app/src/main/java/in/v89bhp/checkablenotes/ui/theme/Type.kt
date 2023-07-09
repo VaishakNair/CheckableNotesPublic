@@ -5,42 +5,69 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import `in`.v89bhp.checkablenotes.R
 
 
-val fontFamily = FontFamily(
+val comfortaaFontFamily = FontFamily(
     listOf(
-        Font(R.font.coco_gothic_light, FontWeight.Light),
-        Font(R.font.coco_gothic_regular, FontWeight.Normal),
-        Font(R.font.coco_gothic_bold, FontWeight.Bold)
+        Font(R.font.comfortaa_light, FontWeight.Light),
+        Font(R.font.comfortaa_regular, FontWeight.Normal),
+        Font(R.font.comfortaa_bold, FontWeight.Bold)
     ),
 )
 
-// Set of Material typography styles to start with
+// Custom typography:
 val typography = Typography(
-    displayLarge = TextStyle(fontFamily = fontFamily, fontWeight = FontWeight.Bold),
-    displayMedium = TextStyle(fontFamily = fontFamily, fontWeight = FontWeight.Bold),
-    displaySmall = TextStyle(fontFamily = fontFamily, fontWeight = FontWeight.Bold),
+    displayLarge = TextStyle(
+        fontFamily = comfortaaFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 57.sp
+    ),
+    displayMedium = TextStyle(
+        fontFamily = comfortaaFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 45.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = comfortaaFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 36.sp
+    ),
 
-    headlineLarge = TextStyle(fontFamily = fontFamily, fontWeight = FontWeight.Bold),
-    headlineMedium = TextStyle(fontFamily = fontFamily, fontWeight = FontWeight.Bold),
-    headlineSmall = TextStyle(fontFamily = fontFamily),
 
-    titleLarge = TextStyle(fontFamily = fontFamily),
-    titleMedium = TextStyle(fontFamily = fontFamily),
-    titleSmall = TextStyle(fontFamily = fontFamily),
+    headlineLarge = TextStyle(
+        fontFamily = comfortaaFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 32.sp
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = comfortaaFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 28.sp
+    ),
+    headlineSmall = TextStyle(fontFamily = comfortaaFontFamily, fontSize = 24.sp),
 
-    bodyLarge = TextStyle(fontFamily = fontFamily),
-    bodyMedium = TextStyle(fontFamily = fontFamily),
-    bodySmall = TextStyle(fontFamily = fontFamily),
 
-    labelLarge = TextStyle(fontFamily = fontFamily),
-    labelMedium = TextStyle(fontFamily = fontFamily),
-    labelSmall = TextStyle(fontFamily = fontFamily),
-//    bodyLarge = TextStyle(
-//        fontFamily = FontFamily.Default,
-//        fontWeight = FontWeight.Normal,
-//        fontSize = 16.sp
-//    )
+    titleLarge = TextStyle(fontFamily = comfortaaFontFamily, fontWeight = FontWeight.Bold, fontSize = 22.sp),
+    titleMedium = TextStyle(
+        fontFamily = comfortaaFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp
+    ),
+    titleSmall = TextStyle(fontFamily = comfortaaFontFamily, fontWeight = FontWeight.Bold, fontSize = 14.sp),
 
+
+    bodyLarge = TextStyle(fontFamily = comfortaaFontFamily, fontSize = 16.sp),
+    bodyMedium = TextStyle(fontFamily = comfortaaFontFamily, fontSize = 14.sp),
+    bodySmall = TextStyle(fontFamily = comfortaaFontFamily, fontSize = 12.sp),
+
+
+    labelLarge = TextStyle(fontFamily = comfortaaFontFamily, fontWeight = FontWeight.Bold, fontSize = 14.sp),
+    labelMedium = TextStyle(
+        fontFamily = comfortaaFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 12.sp
+    ),
+    labelSmall = TextStyle(fontFamily = comfortaaFontFamily, fontWeight = FontWeight.Bold, fontSize = 11.sp),
 )
