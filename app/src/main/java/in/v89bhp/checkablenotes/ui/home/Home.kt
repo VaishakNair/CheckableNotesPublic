@@ -270,7 +270,7 @@ fun NoteCard(
 
     Card(
         modifier = modifier
-            .size(width = 110.dp, height = 120.dp)
+            .size(width = 110.dp, height = 140.dp)
             .semantics { selected = isSelected }
             .pointerInput(Unit) {
                 detectTapGestures(
