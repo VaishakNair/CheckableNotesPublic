@@ -39,7 +39,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
 
     val completedItemsCount: Int
-        get () = list.size - pendingItemsCount
+        get() = list.size - pendingItemsCount
     val pendingItemsCount: Int
         get() = list.sumOf {
             if (!it.isChecked) 1 as Int else 0
@@ -68,7 +68,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         } else {
             value.text.trim().split('\n').filter { it.trim() != "" }
                 .mapIndexed { index, item ->
-                    CheckableItem(index, item)
+                    CheckableItem(id = index, name = item)
                 }
         }
 
@@ -135,20 +135,39 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         val changedItemIndex = list.indexOfFirst { it.id == checkableItem.id }
         checkableItem.isChecked = isChecked
 
-        if (isChecked) {
+        if (isChecked) {// Item is checked:
+
+
+
             list.getOrNull(changedItemIndex + 1)?.let { nextItem -> // There's a next item.
                 if (!nextItem.isChecked) { // The next item is not checked. Move the checked item to the bottom of the list
                     list.removeIf { item -> item.id == checkableItem.id }
                     list.add(checkableItem)
                 }
             }
-        } else {
-            list.getOrNull(changedItemIndex - 1)?.let { previousItem -> // There's a previous item.
-                if (previousItem.isChecked) { // The previous item is checked. Move the unchecked item to the top of the list
-                    list.removeIf { item -> item.id == checkableItem.id }
-                    list.add(0, checkableItem)
-                }
-            }
+        } else {// Item is unchecked
+            list.remove(checkableItem)
+            list.add(checkableItem.id, checkableItem)
+
+            val currentlyUncheckedItems = list.filterNot { item -> item.isChecked }
+            list.removeAll(currentlyUncheckedItems)
+            list.addAll(0, currentlyUncheckedItems.sortedBy { item -> item.id })
+
+            val currentlyCheckedItems = list.filter { item -> item.isChecked }
+            list.removeAll(currentlyCheckedItems)
+            Log.i(
+                "NoteViewModel",
+                "Currently sorted checked items: ${currentlyCheckedItems.sortedBy { it.id }}"
+            )
+            list.addAll(currentlyCheckedItems.sortedBy { item -> item.id })
+
+
+//            list.getOrNull(changedItemIndex - 1)?.let { previousItem -> // There's a previous item.
+//                if (previousItem.isChecked) { // The previous item is checked. Move the unchecked item to the top of the list
+//                    list.removeIf { item -> item.id == checkableItem.id }
+//                    list.add(0, checkableItem)
+//                }
+//            }
         }
     }
 
@@ -161,7 +180,12 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         context.startActivity(Intent.createChooser(sendIntent, null))
     }
 
-    fun saveNote(fileName: String, title: TextFieldValue, text: TextFieldValue, list: List<CheckableItem>) {
+    fun saveNote(
+        fileName: String,
+        title: TextFieldValue,
+        text: TextFieldValue,
+        list: List<CheckableItem>
+    ) {
         Log.i("HomeViewModel", "Saving note: ${text.text}")
         viewModelScope.launch {
 
