@@ -76,8 +76,6 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         Log.i(TAG, "List")
         Log.i(TAG, list.joinToString { "Id: ${it.id} Message: ${it.name}" })
 
-
-        var maxId: Int = if (list.isEmpty()) 0 else list.maxOf { it.id }
         /*
             User deletes one (or more) items.
             ------------------------------------
@@ -111,19 +109,26 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
             if (list.isEmpty()) {
                 list.addAll(newList)
             } else {
-                val noCheckedItem = list.none { it.isChecked }
                 setDifference(newList.toSet(), list.toSet()).forEach { newItem ->
                     Log.i(
                         TAG,
                         "Adding new item with Id: ${newItem.id} and message>>${newItem.name}<<"
                     )
-                    newItem.id = ++maxId
-                    // Add newly added item to the end of the list if it currently
-                    // doesn't contain any checked item. Otherwise add it to the beginning
-                    // This preserves the initial order of items input by the user before
-                    // any item is checked.
-                    list.add(if (noCheckedItem) list.size else 0, newItem)
+                    list.add(newItem.id, newItem)
+
                 }
+
+                val listWithNewIds = list.mapIndexed { index, checkableItem ->
+                    CheckableItem(
+                        id = index,
+                        name = checkableItem.name,
+                        isChecked = checkableItem.isChecked
+                    )
+                }.toMutableList()
+                arrangeItems(listWithNewIds)
+                list.clear()
+                list.addAll(listWithNewIds)
+
             }
         }
     }
@@ -131,6 +136,10 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onCheckedChange(checkableItem: CheckableItem, isChecked: Boolean) {
         checkableItem.isChecked = isChecked
+        arrangeItems(list)
+    }
+
+    private fun arrangeItems(list: MutableList<CheckableItem>) {
 
         // Remove unchecked items from the list, sort them in their natural order (the one input by user based on which their ids are assigned,
         // and add them to the top of the list:
