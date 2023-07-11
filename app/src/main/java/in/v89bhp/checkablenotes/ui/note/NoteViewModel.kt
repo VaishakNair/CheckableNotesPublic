@@ -17,7 +17,6 @@ import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.data.NotesRepository
 import `in`.v89bhp.checkablenotes.setDifference
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
 
@@ -131,44 +130,19 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun onCheckedChange(checkableItem: CheckableItem, isChecked: Boolean) {
-
-        val changedItemIndex = list.indexOfFirst { it.id == checkableItem.id }
         checkableItem.isChecked = isChecked
 
-        if (isChecked) {// Item is checked:
+        // Remove unchecked items from the list, sort them in their natural order (the one input by user based on which their ids are assigned,
+        // and add them to the top of the list:
+        val currentlyUncheckedItems = list.filterNot { item -> item.isChecked }
+        list.removeAll(currentlyUncheckedItems)
+        list.addAll(0, currentlyUncheckedItems.sortedBy { item -> item.id })
 
-
-
-            list.getOrNull(changedItemIndex + 1)?.let { nextItem -> // There's a next item.
-                if (!nextItem.isChecked) { // The next item is not checked. Move the checked item to the bottom of the list
-                    list.removeIf { item -> item.id == checkableItem.id }
-                    list.add(checkableItem)
-                }
-            }
-        } else {// Item is unchecked
-            list.remove(checkableItem)
-            list.add(checkableItem.id, checkableItem)
-
-            val currentlyUncheckedItems = list.filterNot { item -> item.isChecked }
-            list.removeAll(currentlyUncheckedItems)
-            list.addAll(0, currentlyUncheckedItems.sortedBy { item -> item.id })
-
-            val currentlyCheckedItems = list.filter { item -> item.isChecked }
-            list.removeAll(currentlyCheckedItems)
-            Log.i(
-                "NoteViewModel",
-                "Currently sorted checked items: ${currentlyCheckedItems.sortedBy { it.id }}"
-            )
-            list.addAll(currentlyCheckedItems.sortedBy { item -> item.id })
-
-
-//            list.getOrNull(changedItemIndex - 1)?.let { previousItem -> // There's a previous item.
-//                if (previousItem.isChecked) { // The previous item is checked. Move the unchecked item to the top of the list
-//                    list.removeIf { item -> item.id == checkableItem.id }
-//                    list.add(0, checkableItem)
-//                }
-//            }
-        }
+        // Remove checked items from the list, sort them in their natural order (the one input by user based on which their ids are assigned,
+        // and add them to the bottom of the list:
+        val currentlyCheckedItems = list.filter { item -> item.isChecked }
+        list.removeAll(currentlyCheckedItems)
+        list.addAll(currentlyCheckedItems.sortedBy { item -> item.id })
     }
 
     fun showSharesheet(context: Context) {
