@@ -101,33 +101,21 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         /*
             User adds one (or more) items.
             ------------------------------------
-            First do newList - list to find out the items added by the user. Then add them to list.
-            Find the maximum id in the current list and then set its increments as ids
-            of the new items being added.
          */
         if (newList.isNotEmpty()) {
             if (list.isEmpty()) {
                 list.addAll(newList)
             } else {
-                setDifference(newList.toSet(), list.toSet()).forEach { newItem ->
-                    Log.i(
-                        TAG,
-                        "Adding new item with Id: ${newItem.id} and message>>${newItem.name}<<"
-                    )
-                    list.add(newItem.id, newItem)
-
-                }
-
-
-
-                val listWithNewIds = newList.map {checkableItem ->
-                    checkableItem.isChecked = list.first { it == checkableItem }.isChecked
+                // To preserve the order of user input (the order of new list),
+                // update just the checked status of list item from the current list:
+                val listWithNewIds = newList.map { checkableItem ->
+                    checkableItem.isChecked =
+                        list.firstOrNull { it == checkableItem }?.isChecked ?: false
                     checkableItem
                 }.toMutableList()
                 arrangeItems(listWithNewIds)
                 list.clear()
                 list.addAll(listWithNewIds)
-
             }
         }
     }
