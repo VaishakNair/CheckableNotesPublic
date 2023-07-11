@@ -118,12 +118,11 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
                 }
 
-                val listWithNewIds = list.mapIndexed { index, checkableItem ->
-                    CheckableItem(
-                        id = index,
-                        name = checkableItem.name,
-                        isChecked = checkableItem.isChecked
-                    )
+
+
+                val listWithNewIds = newList.map {checkableItem ->
+                    checkableItem.isChecked = list.first { it == checkableItem }.isChecked
+                    checkableItem
                 }.toMutableList()
                 arrangeItems(listWithNewIds)
                 list.clear()
