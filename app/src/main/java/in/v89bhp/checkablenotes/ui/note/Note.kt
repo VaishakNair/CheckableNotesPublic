@@ -146,15 +146,18 @@ fun Note(
                         navigateBack
                     )
                 }) {
-                    Box(modifier = Modifier
-                        .clip(CircleShape)
-                        .background(color = white)
-                        .padding(3.dp)) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back",
-                        tint = black
-                    )}
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(color = white)
+                            .padding(3.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = black
+                        )
+                    }
                 }
             })
     }) { contentPadding ->
@@ -236,12 +239,18 @@ fun Note(
 
 
             BackHandler(true) {
-                onBackPressed(
-                    fileName,
-                    noteViewModel,
+                if (pagerState.currentPage != 0) {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(0)
+                    }
+                } else {
+                    onBackPressed(
+                        fileName,
+                        noteViewModel,
 
-                    navigateBack
-                )
+                        navigateBack
+                    )
+                }
             }
         }
         if (noteViewModel.openDeleteDialog) {
