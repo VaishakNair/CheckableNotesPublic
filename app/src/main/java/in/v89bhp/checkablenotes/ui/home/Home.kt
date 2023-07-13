@@ -277,7 +277,7 @@ fun NoteCard(
 
     Card(
         modifier = modifier
-            .heightIn(min = 101.dp)
+            .heightIn(min =40.dp)
             .width(110.dp)
             .semantics { selected = isSelected }
             .pointerInput(Unit) {
@@ -295,27 +295,25 @@ fun NoteCard(
     )
     {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(8.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
             // Title:
-//            if (title.isNotEmpty()) {
+            // Show it irrespective of whether title is available or not,
+            // otherwise it will mess up the layout:
                 Text(
                     text = title,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .padding(start = 8.dp, top = 8.dp, end = 8.dp),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold
                 )
-//            }
+
 
             // Note summary and CAB selection button:
             Row(
                 modifier = Modifier
-                    .padding(8.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -444,7 +442,6 @@ fun ItemsCount(
 ) {
     Row(
         modifier = modifier
-            .padding(end = 4.dp, bottom = 4.dp)
             .size(60.dp, 20.dp)
             .background(color = backgroundColor, shape = CircleShape)
             .padding(start = 4.dp, end = 4.dp),
