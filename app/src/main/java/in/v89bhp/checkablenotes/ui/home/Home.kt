@@ -280,7 +280,7 @@ fun NoteCard(
             },
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer
-            else if (pendingItemsCount == 0) light_green
+            else if (pendingItemsCount == 0 && totalItemsCount > 0) light_green
             else MaterialTheme.colorScheme.surfaceVariant,
             contentColor = black
         )

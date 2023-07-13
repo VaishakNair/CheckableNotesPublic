@@ -320,6 +320,7 @@ fun NoteTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) {
 fun TitleTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) {
     OutlinedTextField(
         maxLines = 1,
+        singleLine = true,
         value = noteViewModel.title,
         onValueChange = {
             noteViewModel.title = it
