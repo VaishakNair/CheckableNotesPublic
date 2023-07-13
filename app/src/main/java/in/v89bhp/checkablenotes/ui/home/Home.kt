@@ -310,65 +310,39 @@ fun NoteCard(
                 fontWeight = FontWeight.Bold
             )
 
-
-            // Note summary and CAB selection button:
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-            checkableList.sortedBy { checkableItem -> checkableItem.id }
+            checkableList.sortedBy { checkableItem -> checkableItem.id } // Sort checkable list in the order entered by user
                 .forEachIndexed { index, checkableItem ->
                     if (index < 10) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = CenterVertically
                         ) {
-                            // Checked checkbox:
+                            // Checkbox:
                             Box(
                                 modifier = Modifier
-                                    .size(10.dp)
+                                    .padding(top = 8.dp)
+                                    .size(12.dp)
                                     .clip(RoundedCornerShape(2.dp))
-                                    .border(BorderStroke(1.0.dp, color = black))
-//                                .background(color = black)
-                                ,
+                                    .border(BorderStroke(1.0.dp, color = black)),
                                 contentAlignment = Alignment.Center
                             ) {
                                 if (checkableItem.isChecked) {
                                     Icon(
                                         Icons.Default.Check,
                                         contentDescription = "",
-                                        tint = black
+                                        tint = blue
                                     )
                                 }
                             }
-
+                            // Checkable list item:
                             Text(
                                 text = checkableItem.name,
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier.padding(start = 8.dp)
-
                             )
                         }
                     }
                 }
-//                Column(
-//                    modifier = Modifier
-//                        .weight(0.25f)
-//                        .align(Alignment.CenterVertically)
-//                ) {
-//                    if (isSelected || isCABActivated) {
-//                        Icon(
-//                            painter = if (isSelected) rememberVectorPainter(Icons.Outlined.CheckCircle) else painterResource(
-//                                id = R.drawable.outline_circle_24
-//                            ),
-//                            contentDescription = null,
-//
-//                            )
-//                    }
-//                }
 
-//            }
 
             // Blue checked/ pending items count row at bottom:
             ItemsCount(
