@@ -449,6 +449,7 @@ fun ItemsCount(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
 
+        // Empty checkbox:
         Box(
             modifier = Modifier
                 .size(10.dp)
@@ -463,6 +464,8 @@ fun ItemsCount(
             color = white,
             fontSize = 10.sp
         )
+
+        // Checked checkbox:
         Box(
             modifier = Modifier
                 .size(10.dp)
