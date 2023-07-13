@@ -62,14 +62,19 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun updateList(value: TextFieldValue) {
-        val newList: List<CheckableItem> = if (value.text.trim() == "") {// Empty list
+        var newList: List<CheckableItem> = if (value.text.trim() == "") {// Empty list
             emptyList()
         } else {
-            value.text.trim().split('\n').filter { it.trim() != "" }
-                .mapIndexed { index, item ->
-                    CheckableItem(id = index, name = item)
-                }
+            var list = value.text.trim().split('\n').filter { it.trim() != "" }
+
+            // Remove duplicate elements:
+            list = mutableListOf<String>().apply { addAll(linkedSetOf(*(list.toTypedArray()))) }
+
+            list.mapIndexed { index, item ->
+                CheckableItem(id = index, name = item)
+            }
         }
+
 
         Log.i(TAG, "NewList:")
         Log.i(TAG, newList.joinToString { "Id: ${it.id} Message: ${it.name}" })
