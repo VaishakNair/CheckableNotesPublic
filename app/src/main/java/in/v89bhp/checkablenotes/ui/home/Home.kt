@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -270,7 +272,8 @@ fun NoteCard(
 
     Card(
         modifier = modifier
-            .size(width = 110.dp, height = 140.dp)
+            .heightIn(min = 140.dp)
+            .width(110.dp)
             .semantics { selected = isSelected }
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -287,7 +290,7 @@ fun NoteCard(
     )
     {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
@@ -295,10 +298,10 @@ fun NoteCard(
             if (title.isNotEmpty()) {
                 Text(
                     text = title,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
-                        .padding(start = 8.dp, top = 8.dp),
+                        .padding(start = 8.dp, top = 8.dp, end = 8.dp),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold
                 )
@@ -308,13 +311,12 @@ fun NoteCard(
             Row(
                 modifier = Modifier
                     .padding(8.dp)
-                    .fillMaxWidth()
-                    .weight(0.8f),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = note,
-                    maxLines = 3,
+                    maxLines = 10,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .weight(0.75f)
@@ -358,6 +360,21 @@ fun NoteCard(
         }
     }
 
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
+@Composable
+fun DynamicNoteCardPreview() {
+    Card(
+        modifier = Modifier
+            .width(110.dp)
+            .heightIn(min = 140.dp)
+    ) {
+        Column() {
+            Text(text = "A\nB\nC\nD\nE\nF\nG\nH\nI\nJ")
+        }
+
+    }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
