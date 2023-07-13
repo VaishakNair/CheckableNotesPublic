@@ -20,9 +20,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
@@ -32,7 +29,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,11 +42,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -234,6 +230,7 @@ fun NotesGrid(
         itemsIndexed(notes) { index, note ->
             NoteCard(
                 title = note.title.text,
+                checkableList = note.list,
                 note = note.text.text,
                 onClick = {
                     if (fileNames[index] in selectedFileNames) {// The card has been selected by a long press. De-select it
@@ -264,6 +261,7 @@ fun NotesGrid(
 @Composable
 fun NoteCard(
     title: String,
+    checkableList: List<CheckableItem>,
     note: String,
     onClick: () -> Unit,
     onLongPress: () -> Unit,
@@ -277,7 +275,7 @@ fun NoteCard(
 
     Card(
         modifier = modifier
-            .heightIn(min =40.dp)
+            .heightIn(min = 40.dp)
             .width(110.dp)
             .semantics { selected = isSelected }
             .pointerInput(Unit) {
@@ -295,53 +293,82 @@ fun NoteCard(
     )
     {
         Column(
-            modifier = Modifier.fillMaxSize().padding(8.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
             // Title:
             // Show it irrespective of whether title is available or not,
             // otherwise it will mess up the layout:
-                Text(
-                    text = title,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
-                )
+            Text(
+                text = title,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
 
 
             // Note summary and CAB selection button:
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = note,
-                    maxLines = 10,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .weight(0.75f)
-                        .align(Alignment.Top)
-                )
-                Column(
-                    modifier = Modifier
-                        .weight(0.25f)
-                        .align(Alignment.CenterVertically)
-                ) {
-                    if (isSelected || isCABActivated) {
-                        Icon(
-                            painter = if (isSelected) rememberVectorPainter(Icons.Outlined.CheckCircle) else painterResource(
-                                id = R.drawable.outline_circle_24
-                            ),
-                            contentDescription = null,
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth(),
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+            checkableList.sortedBy { checkableItem -> checkableItem.id }
+                .forEachIndexed { index, checkableItem ->
+                    if (index < 10) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = CenterVertically
+                        ) {
+                            // Checked checkbox:
+                            Box(
+                                modifier = Modifier
+                                    .size(10.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .border(BorderStroke(1.0.dp, color = black))
+//                                .background(color = black)
+                                ,
+                                contentAlignment = Alignment.Center
+                            ) {
+                                if (checkableItem.isChecked) {
+                                    Icon(
+                                        Icons.Default.Check,
+                                        contentDescription = "",
+                                        tint = black
+                                    )
+                                }
+                            }
+
+                            Text(
+                                text = checkableItem.name,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.padding(start = 8.dp)
 
                             )
+                        }
                     }
                 }
+//                Column(
+//                    modifier = Modifier
+//                        .weight(0.25f)
+//                        .align(Alignment.CenterVertically)
+//                ) {
+//                    if (isSelected || isCABActivated) {
+//                        Icon(
+//                            painter = if (isSelected) rememberVectorPainter(Icons.Outlined.CheckCircle) else painterResource(
+//                                id = R.drawable.outline_circle_24
+//                            ),
+//                            contentDescription = null,
+//
+//                            )
+//                    }
+//                }
 
-            }
+//            }
 
             // Blue checked/ pending items count row at bottom:
             ItemsCount(
@@ -385,6 +412,10 @@ fun DynamicNoteCardPreview() {
 fun NoteCardPreview() {
     NoteCard(
         title = "Title 1",
+        checkableList = listOf(
+            CheckableItem(id = 0, name = "Tomato", isChecked = false),
+            CheckableItem(id = 1, name = "Potato", isChecked = true)
+        ),
         note = "Tomatodfdfdfdfdf\nPotato\nDates",
         onClick = {},
         onLongPress = {},
