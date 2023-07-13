@@ -277,7 +277,7 @@ fun NoteCard(
 
     Card(
         modifier = modifier
-            .heightIn(min = 140.dp)
+            .heightIn(min = 101.dp)
             .width(110.dp)
             .semantics { selected = isSelected }
             .pointerInput(Unit) {
@@ -295,12 +295,12 @@ fun NoteCard(
     )
     {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
 
             // Title:
-            if (title.isNotEmpty()) {
+//            if (title.isNotEmpty()) {
                 Text(
                     text = title,
                     maxLines = 2,
@@ -310,7 +310,7 @@ fun NoteCard(
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold
                 )
-            }
+//            }
 
             // Note summary and CAB selection button:
             Row(
