@@ -7,9 +7,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
+open class NotesRepository(private val ioDispatcher: CoroutineDispatcher) {
 
-    suspend fun loadNotes(context: Context): Pair<List<String>, List<Note>> {
+    open suspend fun loadNotes(context: Context): Pair<List<String>, List<Note>> {
         val fileNames: List<String> =
             context.fileList().toList().filter { fileName -> fileName.matches(Regex("[0-9]+\\.json")) }
                 .sortedByDescending { fileName ->
