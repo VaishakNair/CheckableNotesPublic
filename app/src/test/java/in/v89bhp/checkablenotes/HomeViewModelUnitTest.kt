@@ -4,7 +4,10 @@ import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.data.NotesRepository
 import `in`.v89bhp.checkablenotes.ui.home.HomeViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.test.StandardTestDispatcher
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -20,11 +23,18 @@ class HomeViewModelUnitTest {
 
     @Test
     fun loadNotesInitial() {
-        val homeViewModel = HomeViewModel(FakeNotesRepository)
+        val homeViewModel = HomeViewModel(
+            notesRepository = FakeNotesRepository,
+            coroutineDispatcher = StandardTestDispatcher(),
+            start = CoroutineStart.UNDISPATCHED
+        )
+
+        homeViewModel.loadNotesInitial(mockContext)
+        assertEquals(homeViewModel.notesList.toList(), FakeNotesRepository.notesList)
     }
 }
 
-object FakeNotesRepository : NotesRepository(Dispatchers.IO) {
+object FakeNotesRepository : NotesRepository(StandardTestDispatcher()) {
     val fileNamesList = listOf("File1.json", "File2.json")
     val notesList = listOf(
         Note(

@@ -15,10 +15,19 @@ import androidx.lifecycle.viewModelScope
 import `in`.v89bhp.checkablenotes.Graph
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.data.NotesRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
 
 private const val TAG = "HomeViewModel"
-class HomeViewModel(private val notesRepository: NotesRepository = Graph.notesRepository) : ViewModel() {
+
+class HomeViewModel(
+    private val notesRepository: NotesRepository = Graph.notesRepository,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.Main,
+    private val start: CoroutineStart = CoroutineStart.DEFAULT
+) : ViewModel() {
 
     var notesList = mutableListOf<Note>().toMutableStateList()
     var fileNamesList = mutableListOf<String>().toMutableStateList()
@@ -30,7 +39,10 @@ class HomeViewModel(private val notesRepository: NotesRepository = Graph.notesRe
     var noNotes by mutableStateOf(false)
 
     fun loadNotesInitial(context: Context) {
-        viewModelScope.launch {
+        viewModelScope.launch(
+            context = coroutineDispatcher,
+            start = start
+        ) {
             loadNotes(context)
         }
 
@@ -40,6 +52,7 @@ class HomeViewModel(private val notesRepository: NotesRepository = Graph.notesRe
         isLoadingNotes = true
 
         val (fileNames, notes) = notesRepository.loadNotes(context)
+
         fileNamesList.clear()
         fileNamesList.addAll(fileNames)
 
@@ -53,9 +66,11 @@ class HomeViewModel(private val notesRepository: NotesRepository = Graph.notesRe
     }
 
 
-
     fun deleteNotes(context: Context, fileNames: List<String>) {
-        viewModelScope.launch {
+        viewModelScope.launch(
+            context = coroutineDispatcher,
+            start = start
+        ) {
             notesRepository.deleteNotes(context, fileNames)
             selectedFileNames.clear()
             loadNotes(context)
