@@ -17,9 +17,8 @@ import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.data.NotesRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
-    private val TAG = "HomeViewModel"
-    private val notesRepository: NotesRepository = Graph.notesRepository
+private const val TAG = "HomeViewModel"
+class HomeViewModel(private val notesRepository: NotesRepository = Graph.notesRepository) : ViewModel() {
 
     var notesList = mutableListOf<Note>().toMutableStateList()
     var fileNamesList = mutableListOf<String>().toMutableStateList()
