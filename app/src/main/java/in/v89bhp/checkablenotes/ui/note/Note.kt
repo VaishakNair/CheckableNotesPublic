@@ -93,7 +93,7 @@ fun Note(
     val context = LocalContext.current
 
     LaunchedEffect(true) {// Load note (if any) during composition. Ignored during recompositions
-        noteViewModel.loadNote(fileName)
+        noteViewModel.loadNote(context, fileName)
     }
 
     DisposableEffect(lifecycleOwner) {
@@ -101,7 +101,7 @@ fun Note(
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_STOP -> {
-                    onBackPressed(fileName, noteViewModel) {}
+                    onBackPressed(context, fileName, noteViewModel) {}
                 }
 
                 else -> {// Do nothing for other events.
@@ -141,6 +141,7 @@ fun Note(
             navigationIcon = {
                 IconButton(onClick = {
                     onBackPressed(
+                        context,
                         fileName,
                         noteViewModel,
                         navigateBack
@@ -245,6 +246,7 @@ fun Note(
                     }
                 } else {
                     onBackPressed(
+                        context,
                         fileName,
                         noteViewModel,
 
@@ -258,7 +260,7 @@ fun Note(
                 text = R.string.delete_this_note,
                 onConfirmation = { confirmed ->
                     if (confirmed) {
-                        noteViewModel.deleteNotes(listOf(fileName))
+                        noteViewModel.deleteNotes(context, listOf(fileName))
                         navigateBack()
                     }
                     noteViewModel.openDeleteDialog = false
@@ -406,16 +408,19 @@ fun ItemCard(
 }
 
 fun onBackPressed(
+    context: Context,
     fileName: String,
     noteViewModel: NoteViewModel,
     navigateBack: () -> Unit
 ) {
+
     if (noteViewModel.text.text.trim() == "" && noteViewModel.title.text.trim() == "") {// Note doesn't have title or content. Delete the existing note (if any)
-        noteViewModel.deleteNotes(listOf(fileName))
+        noteViewModel.deleteNotes(context, listOf(fileName))
     } else {
         noteViewModel.loadedNote?.let { loadedNote -> // Not a new note:
             if (loadedNote.title.text != noteViewModel.title.text || loadedNote.text.text != noteViewModel.text.text || !(loadedNote.list nameischeckedequals noteViewModel.list)) {// Note has been updated (either title or text or checkable list):
                 noteViewModel.saveNote(
+                    context,
                     fileName,
                     noteViewModel.title,
                     noteViewModel.text,
@@ -423,6 +428,7 @@ fun onBackPressed(
                 )
             }
         } ?: noteViewModel.saveNote( // New note:
+            context,
             fileName,
             noteViewModel.title,
             noteViewModel.text,

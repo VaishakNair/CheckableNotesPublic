@@ -1,29 +1,23 @@
 package `in`.v89bhp.checkablenotes.ui.home
 
-import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.CombinedVibration
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.v89bhp.checkablenotes.Graph
-import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.data.NotesRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
-    application: Application
-) : AndroidViewModel(application) {
+class HomeViewModel : ViewModel() {
     private val TAG = "HomeViewModel"
     private val notesRepository: NotesRepository = Graph.notesRepository
 
@@ -36,17 +30,17 @@ class HomeViewModel(
     var isLoadingNotes by mutableStateOf(false)
     var noNotes by mutableStateOf(false)
 
-    fun loadNotesInitial() {
+    fun loadNotesInitial(context: Context) {
         viewModelScope.launch {
-            loadNotes()
+            loadNotes(context)
         }
 
     }
 
-    private suspend fun loadNotes() {
+    private suspend fun loadNotes(context: Context) {
         isLoadingNotes = true
 
-        val (fileNames, notes) = notesRepository.loadNotes(getApplication())
+        val (fileNames, notes) = notesRepository.loadNotes(context)
         fileNamesList.clear()
         fileNamesList.addAll(fileNames)
 
@@ -61,11 +55,11 @@ class HomeViewModel(
 
 
 
-    fun deleteNotes(fileNames: List<String>) {
+    fun deleteNotes(context: Context, fileNames: List<String>) {
         viewModelScope.launch {
-            notesRepository.deleteNotes(getApplication(), fileNames)
+            notesRepository.deleteNotes(context, fileNames)
             selectedFileNames.clear()
-            loadNotes()
+            loadNotes(context)
         }
     }
 
@@ -81,10 +75,10 @@ class HomeViewModel(
     val allSelected: Boolean
         get() = selectedFileNames.size == fileNamesList.size
 
-    fun longPressVibrate() {
+    fun longPressVibrate(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {// For Devices that support VibratorManager:
             val vibratorManager: VibratorManager =
-                (getApplication() as Context).getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             vibratorManager.vibrate(
                 CombinedVibration.createParallel(
                     VibrationEffect.createPredefined(
@@ -94,7 +88,7 @@ class HomeViewModel(
             )
         } else {
             val vibrator =
-                (getApplication() as Context).getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // Vibrator (Deprecated) with VibrationEffect
                 vibrator.vibrate(
                     VibrationEffect.createOneShot(

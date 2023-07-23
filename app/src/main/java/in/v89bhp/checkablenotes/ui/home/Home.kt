@@ -85,10 +85,12 @@ fun Home(
     ),
 ) {
 
+    val context = LocalContext.current
+
     LaunchedEffect(homeViewModel) {
         Log.i("LE", "Home load notes")
         delay(150) // Delay for NoteViewModel.saveNote() coroutine to complete. Useful when coming back after creating a new note.
-        homeViewModel.loadNotesInitial()
+        homeViewModel.loadNotesInitial(context)
     }
 
     Scaffold(
@@ -170,7 +172,7 @@ fun Home(
                     navigateToNote = navigateToNote,
                     onLongPress = { fileName ->
                         if (homeViewModel.selectedFileNames.isEmpty()) { // First long press. Vibrate
-                            homeViewModel.longPressVibrate()
+                            homeViewModel.longPressVibrate(context)
                         }
                         if (fileName !in homeViewModel.selectedFileNames) { // Ignore subsequent long-presses from the same item.
                             homeViewModel.selectedFileNames.add(fileName)
@@ -195,7 +197,7 @@ fun Home(
                 text = R.string.delete_selected_notes,
                 onConfirmation = { confirmed ->
                     if (confirmed) {
-                        homeViewModel.deleteNotes(homeViewModel.selectedFileNames)
+                        homeViewModel.deleteNotes(context, homeViewModel.selectedFileNames)
                     }
                     homeViewModel.openDeleteDialog = false
                 })

@@ -1,6 +1,5 @@
 package `in`.v89bhp.checkablenotes.ui.note
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -10,7 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.v89bhp.checkablenotes.Graph
 import `in`.v89bhp.checkablenotes.data.CheckableItem
@@ -20,7 +19,7 @@ import `in`.v89bhp.checkablenotes.setDifference
 import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
 
-class NoteViewModel(application: Application) : AndroidViewModel(application) {
+class NoteViewModel : ViewModel() {
 
     private val TAG = "NoteViewModel"
 
@@ -44,10 +43,10 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
             if (!it.isChecked) 1 as Int else 0
         }
 
-    fun loadNote(fileName: String) {
+    fun loadNote(context: Context, fileName: String) {
         viewModelScope.launch {
             try {
-                loadedNote = notesRepository.loadNote(getApplication(), fileName)
+                loadedNote = notesRepository.loadNote(context, fileName)
                 title = loadedNote!!.title
                 text = loadedNote!!.text
                 list.clear()
@@ -156,6 +155,7 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun saveNote(
+        context: Context,
         fileName: String,
         title: TextFieldValue,
         text: TextFieldValue,
@@ -165,16 +165,16 @@ class NoteViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
 
             notesRepository.saveNote(
-                context = getApplication(),
+                context = context,
                 note = Note(title = title, text = text, list = list),
                 fileName = fileName
             )
         }
     }
 
-    fun deleteNotes(fileNames: List<String>) {
+    fun deleteNotes(context: Context, fileNames: List<String>) {
         viewModelScope.launch {
-            notesRepository.deleteNotes(getApplication(), fileNames)
+            notesRepository.deleteNotes(context, fileNames)
         }
     }
 }
