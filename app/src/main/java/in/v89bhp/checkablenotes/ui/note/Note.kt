@@ -413,29 +413,7 @@ fun onBackPressed(
     noteViewModel: NoteViewModel,
     navigateBack: () -> Unit
 ) {
-
-    if (noteViewModel.text.text.trim() == "" && noteViewModel.title.text.trim() == "") {// Note doesn't have title or content. Delete the existing note (if any)
-        noteViewModel.deleteNotes(context, listOf(fileName))
-    } else {
-        noteViewModel.loadedNote?.let { loadedNote -> // Not a new note:
-            if (loadedNote.title.text != noteViewModel.title.text || loadedNote.text.text != noteViewModel.text.text || !(loadedNote.list nameischeckedequals noteViewModel.list)) {// Note has been updated (either title or text or checkable list):
-                noteViewModel.saveNote(
-                    context,
-                    fileName,
-                    noteViewModel.title,
-                    noteViewModel.text,
-                    noteViewModel.list
-                )
-            }
-        } ?: noteViewModel.saveNote( // New note:
-            context,
-            fileName,
-            noteViewModel.title,
-            noteViewModel.text,
-            noteViewModel.list
-        ) // New note. Save it.
-
-    }
+    noteViewModel.handleBackPress(context = context, fileName = fileName)
     navigateBack()
 }
 

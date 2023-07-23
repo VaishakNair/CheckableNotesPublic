@@ -15,13 +15,15 @@ import `in`.v89bhp.checkablenotes.Graph
 import `in`.v89bhp.checkablenotes.data.CheckableItem
 import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.data.NotesRepository
+import `in`.v89bhp.checkablenotes.data.nameischeckedequals
 import `in`.v89bhp.checkablenotes.setDifference
 import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
 
+private const val TAG = "NoteViewModel"
 class NoteViewModel : ViewModel() {
 
-    private val TAG = "NoteViewModel"
+
 
     private val notesRepository: NotesRepository = Graph.notesRepository
 
@@ -154,7 +156,32 @@ class NoteViewModel : ViewModel() {
         context.startActivity(Intent.createChooser(sendIntent, null))
     }
 
-    fun saveNote(
+    fun handleBackPress(context: Context, fileName: String) {
+        if (text.text.trim() == "" && title.text.trim() == "") {// Note doesn't have title or content. Delete the existing note (if any)
+            deleteNotes(context, listOf(fileName))
+        } else {
+            loadedNote?.let { loadedNote -> // Not a new note:
+                if (loadedNote.title.text != title.text || loadedNote.text.text != text.text || !(loadedNote.list nameischeckedequals list)) {// Note has been updated (either title or text or checkable list):
+                    saveNote(
+                        context,
+                        fileName,
+                        title,
+                        text,
+                        list
+                    )
+                }
+            } ?: saveNote( // New note:
+                context,
+                fileName,
+                title,
+                text,
+                list
+            ) // New note. Save it.
+
+        }
+    }
+
+    private fun saveNote(
         context: Context,
         fileName: String,
         title: TextFieldValue,
