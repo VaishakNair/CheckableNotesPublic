@@ -17,15 +17,20 @@ import `in`.v89bhp.checkablenotes.data.Note
 import `in`.v89bhp.checkablenotes.data.NotesRepository
 import `in`.v89bhp.checkablenotes.data.nameischeckedequals
 import `in`.v89bhp.checkablenotes.setDifference
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.FileNotFoundException
 
 private const val TAG = "NoteViewModel"
-class NoteViewModel : ViewModel() {
+class NoteViewModel(
+    private val notesRepository: NotesRepository = Graph.notesRepository,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.Main,
+    private val start: CoroutineStart = CoroutineStart.DEFAULT
 
+) : ViewModel() {
 
-
-    private val notesRepository: NotesRepository = Graph.notesRepository
 
     var title by mutableStateOf(TextFieldValue("", TextRange(0)))
 
@@ -46,7 +51,10 @@ class NoteViewModel : ViewModel() {
         }
 
     fun loadNote(context: Context, fileName: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(
+            context = coroutineDispatcher,
+            start = start
+        ) {
             try {
                 loadedNote = notesRepository.loadNote(context, fileName)
                 title = loadedNote!!.title
@@ -189,7 +197,10 @@ class NoteViewModel : ViewModel() {
         list: List<CheckableItem>
     ) {
         Log.i("HomeViewModel", "Saving note: ${text.text}")
-        viewModelScope.launch {
+        viewModelScope.launch(
+            context = coroutineDispatcher,
+            start = start
+        ) {
 
             notesRepository.saveNote(
                 context = context,
@@ -200,7 +211,10 @@ class NoteViewModel : ViewModel() {
     }
 
     fun deleteNotes(context: Context, fileNames: List<String>) {
-        viewModelScope.launch {
+        viewModelScope.launch(
+            context = coroutineDispatcher,
+            start = start
+        ) {
             notesRepository.deleteNotes(context, fileNames)
         }
     }
