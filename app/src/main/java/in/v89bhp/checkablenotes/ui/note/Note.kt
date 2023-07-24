@@ -346,9 +346,10 @@ fun NoteTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) {
             .onFocusChanged { isFocused = it.isFocused },
         shape = RoundedCornerShape(16.dp),
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = white,
-            textColor = black
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = white,
+            unfocusedTextColor = black,
+            focusedTextColor = black
         )
     )
 }
@@ -370,9 +371,10 @@ fun TitleTextField(noteViewModel: NoteViewModel, modifier: Modifier = Modifier) 
             .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = white,
-            textColor = black
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = white,
+            focusedTextColor = black,
+            unfocusedTextColor = black
         )
     )
 }
