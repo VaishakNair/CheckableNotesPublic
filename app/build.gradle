@@ -77,7 +77,12 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation "androidx.compose.material3:material3:1.0.1"
+
+    // For getting window size to make layouts adaptive:
+    implementation "androidx.compose.material3:material3-window-size-class:1.1.1"
+    
 //    implementation "androidx.compose.material:material-icons-extended"
+
 
     constraints {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0") {

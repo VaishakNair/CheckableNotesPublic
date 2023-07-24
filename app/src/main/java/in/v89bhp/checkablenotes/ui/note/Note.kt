@@ -65,7 +65,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import `in`.v89bhp.checkablenotes.R
 import `in`.v89bhp.checkablenotes.data.CheckableItem
-import `in`.v89bhp.checkablenotes.data.nameischeckedequals
 import `in`.v89bhp.checkablenotes.ui.dialogs.ConfirmationDialog
 import `in`.v89bhp.checkablenotes.ui.home.ItemsCount
 import `in`.v89bhp.checkablenotes.ui.theme.black
@@ -85,6 +84,7 @@ import kotlinx.coroutines.launch
 fun Note(
     fileName: String,
     navigateBack: () -> Unit,
+    showOnePane: Boolean,
     modifier: Modifier = Modifier,
     noteViewModel: NoteViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
@@ -163,98 +163,17 @@ fun Note(
             })
     }) { contentPadding ->
 
-
-        val titles = listOf("Note", "Checkable List")
-        val coroutineScope = rememberCoroutineScope()
-        val pagerState = rememberPagerState()
-        val keyboardController = LocalSoftwareKeyboardController.current
-        if (pagerState.currentPage == 1) {
-            keyboardController?.hide()
+        if (showOnePane) {
+            OnePane(
+                noteViewModel = noteViewModel,
+                fileName = fileName,
+                navigateBack = navigateBack,
+                modifier = Modifier.padding(contentPadding)
+            )
+        } else {
+//            TwoPane() TODO
         }
-        Column(
-            modifier = modifier
-                .padding(contentPadding)
-                .background(Brush.verticalGradient(listOf(black, light_grey_2)))
-        ) {
 
-            Row(
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 16.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                titles.forEachIndexed { index, title ->
-                    FilledTonalButton(
-                        onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
-                        colors = ButtonDefaults.filledTonalButtonColors(
-                            contentColor = white,
-                            containerColor = if (pagerState.currentPage == index) blue else dark_grey
-                        )
-                    ) {
-                        Text(text = title)
-                    }
-                }
-
-                ItemsCount(
-                    completedItemsCount = noteViewModel.completedItemsCount,
-                    pendingItemsCount = noteViewModel.pendingItemsCount,
-                    backgroundColor = light_grey
-                )
-
-
-            }
-
-            HorizontalPager(
-                pageCount = titles.size,
-                state = pagerState
-            ) { page ->
-                if (page == 0) { // Note tab
-                    Column(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .background(color = light_grey, shape = RoundedCornerShape(16.dp))
-                    ) {
-
-                        TitleTextField(noteViewModel = noteViewModel)
-                        NoteTextField(noteViewModel = noteViewModel)
-                    }
-
-
-                } else { // Checkable list tab
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .background(color = light_grey, shape = RoundedCornerShape(16.dp))
-                    ) {
-                        CheckableList(checkableItems = noteViewModel.list,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            onCheckedChange = { checkableItem, newValue ->
-                                noteViewModel.onCheckedChange(checkableItem, newValue)
-                            })
-                    }
-                }
-            }
-
-
-
-            BackHandler(true) {
-                if (pagerState.currentPage != 0) {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(0)
-                    }
-                } else {
-                    onBackPressed(
-                        context,
-                        fileName,
-                        noteViewModel,
-
-                        navigateBack
-                    )
-                }
-            }
-        }
         if (noteViewModel.openDeleteDialog) {
             ConfirmationDialog(title = R.string.delete_note,
                 text = R.string.delete_this_note,
@@ -266,6 +185,123 @@ fun Note(
                     noteViewModel.openDeleteDialog = false
                 })
         }
+    }
+}
+
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@Composable
+fun OnePane(
+    noteViewModel: NoteViewModel,
+    fileName: String,
+    navigateBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val titles = listOf("Note", "Checkable List")
+    val coroutineScope = rememberCoroutineScope()
+    val pagerState = rememberPagerState()
+    val keyboardController = LocalSoftwareKeyboardController.current
+    if (pagerState.currentPage == 1) {
+        keyboardController?.hide()
+    }
+    Column(
+        modifier = modifier
+//            .padding(contentPadding)
+            .background(Brush.verticalGradient(listOf(black, light_grey_2)))
+    ) {
+
+        Row(
+            modifier = Modifier
+                .padding(start = 16.dp, top = 16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            titles.forEachIndexed { index, title ->
+                FilledTonalButton(
+                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        contentColor = white,
+                        containerColor = if (pagerState.currentPage == index) blue else dark_grey
+                    )
+                ) {
+                    Text(text = title)
+                }
+            }
+
+            ItemsCount(
+                completedItemsCount = noteViewModel.completedItemsCount,
+                pendingItemsCount = noteViewModel.pendingItemsCount,
+                backgroundColor = light_grey
+            )
+
+
+        }
+
+        HorizontalPager(
+            pageCount = titles.size,
+            state = pagerState
+        ) { page ->
+            if (page == 0) { // Note tab
+                NoteTab(noteViewModel = noteViewModel)
+
+
+            } else { // Checkable list tab
+                CheckableListTab(noteViewModel = noteViewModel)
+            }
+        }
+
+
+        BackHandler(true) {
+            if (pagerState.currentPage != 0) {
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(0)
+                }
+            } else {
+                onBackPressed(
+                    context,
+                    fileName,
+                    noteViewModel,
+                    navigateBack
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun NoteTab(
+    noteViewModel: NoteViewModel,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .background(color = light_grey, shape = RoundedCornerShape(16.dp))
+    ) {
+
+        TitleTextField(noteViewModel = noteViewModel)
+        NoteTextField(noteViewModel = noteViewModel)
+    }
+}
+
+@Composable
+fun CheckableListTab(
+    noteViewModel: NoteViewModel,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = Modifier
+            .padding(16.dp)
+            .background(color = light_grey, shape = RoundedCornerShape(16.dp))
+    ) {
+        CheckableList(checkableItems = noteViewModel.list,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            onCheckedChange = { checkableItem, newValue ->
+                noteViewModel.onCheckedChange(checkableItem, newValue)
+            })
     }
 }
 
