@@ -1,5 +1,6 @@
 package `in`.v89bhp.checkablenotes
 
+import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
@@ -13,12 +14,23 @@ import org.junit.Assert.*
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
+
+private const val TAG = "HomeScreenInstrumentedTest"
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class HomeScreenInstrumentedTest {
     @Test
-    fun useAppContext() {
+    fun ensureFileNameFormat() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("in.v89bhp.composebasics", appContext.packageName)
+
+        val fileNameFormat = Regex("[0-9]+\\.json")
+
+        val appPrivateFileList: List<String> =  appContext.fileList().toList()
+
+        appPrivateFileList.forEach { fileName ->
+            assertTrue("Doesn't match for file name: >>$fileName<<", fileName.matches(fileNameFormat))
+        }
+
+//        assertEquals(appContext.packageName, "in.v89bhp.checkablenotes")
     }
 }
