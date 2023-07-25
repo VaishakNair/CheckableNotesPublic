@@ -125,7 +125,7 @@ fun Note(
             },
             actions = {
 
-                if(!showOnePane) {
+                if (!showOnePane) {
                     ItemsCount(
                         modifier = Modifier.size(width = 70.dp, height = 22.dp),
                         completedItemsCount = noteViewModel.completedItemsCount,
@@ -295,21 +295,27 @@ fun TwoPane(
     val context = LocalContext.current
     Row(modifier = modifier.fillMaxSize()) {
         NoteTab(
-            modifier = Modifier.weight(0.5f),
-            noteViewModel = noteViewModel)
+            modifier = Modifier
+                .weight(0.5f)
+                .padding(start = 16.dp, top = 16.dp, bottom = 16.dp, end = 8.dp),
+            noteViewModel = noteViewModel
+        )
 
         CheckableListTab(
-            modifier = Modifier.weight(0.5f),
-            noteViewModel = noteViewModel)
+            modifier = Modifier
+                .weight(0.5f)
+                .padding(start = 8.dp, top = 16.dp, bottom = 16.dp, end = 16.dp),
+            noteViewModel = noteViewModel
+        )
     }
 
     BackHandler(true) {
-            onBackPressed(
-                context,
-                fileName,
-                noteViewModel,
-                navigateBack
-            )
+        onBackPressed(
+            context,
+            fileName,
+            noteViewModel,
+            navigateBack
+        )
 
     }
 
@@ -318,11 +324,10 @@ fun TwoPane(
 @Composable
 fun NoteTab(
     noteViewModel: NoteViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.padding(16.dp)
 ) {
     Column(
         modifier = modifier
-            .padding(16.dp)
             .background(color = light_grey, shape = RoundedCornerShape(16.dp))
     ) {
 
@@ -334,11 +339,10 @@ fun NoteTab(
 @Composable
 fun CheckableListTab(
     noteViewModel: NoteViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.padding(16.dp)
 ) {
     Box(
         modifier = modifier
-            .padding(16.dp)
             .background(color = light_grey, shape = RoundedCornerShape(16.dp))
     ) {
         CheckableList(checkableItems = noteViewModel.list,
