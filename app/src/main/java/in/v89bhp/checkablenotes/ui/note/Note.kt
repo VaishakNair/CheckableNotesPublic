@@ -171,7 +171,12 @@ fun Note(
                 modifier = Modifier.padding(contentPadding)
             )
         } else {
-//            TwoPane() TODO
+            TwoPane(
+                noteViewModel = noteViewModel,
+                fileName = fileName,
+                navigateBack = navigateBack,
+                modifier = Modifier.padding(contentPadding)
+            )
         }
 
         if (noteViewModel.openDeleteDialog) {
@@ -270,6 +275,36 @@ fun OnePane(
 }
 
 @Composable
+fun TwoPane(
+    noteViewModel: NoteViewModel,
+    fileName: String,
+    navigateBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    Row(modifier = modifier.fillMaxSize()) {
+        NoteTab(
+            modifier = Modifier.weight(0.5f),
+            noteViewModel = noteViewModel)
+
+        CheckableListTab(
+            modifier = Modifier.weight(0.5f),
+            noteViewModel = noteViewModel)
+    }
+
+    BackHandler(true) {
+            onBackPressed(
+                context,
+                fileName,
+                noteViewModel,
+                navigateBack
+            )
+
+    }
+
+}
+
+@Composable
 fun NoteTab(
     noteViewModel: NoteViewModel,
     modifier: Modifier = Modifier
@@ -291,7 +326,7 @@ fun CheckableListTab(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(16.dp)
             .background(color = light_grey, shape = RoundedCornerShape(16.dp))
     ) {
