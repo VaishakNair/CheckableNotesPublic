@@ -444,15 +444,14 @@ fun NotesGridPreview() {
 @Composable
 fun ItemsCount(
     completedItemsCount: Int, pendingItemsCount: Int,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.size(60.dp, 20.dp),
     backgroundColor: Color = blue,
 ) {
     Row(
         modifier = modifier
-            .size(60.dp, 20.dp)
             .background(color = backgroundColor, shape = CircleShape)
             .padding(start = 4.dp, end = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
 

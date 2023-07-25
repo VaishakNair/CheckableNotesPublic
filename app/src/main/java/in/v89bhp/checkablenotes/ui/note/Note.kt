@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -123,6 +124,16 @@ fun Note(
                 Text(stringResource(id = R.string.app_name))
             },
             actions = {
+
+                if(!showOnePane) {
+                    ItemsCount(
+                        modifier = Modifier.size(width = 70.dp, height = 22.dp),
+                        completedItemsCount = noteViewModel.completedItemsCount,
+                        pendingItemsCount = noteViewModel.pendingItemsCount,
+                        backgroundColor = light_grey
+                    )
+                }
+
                 IconButton(onClick = { noteViewModel.openDeleteDialog = true }) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
