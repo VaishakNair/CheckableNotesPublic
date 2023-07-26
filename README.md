@@ -6,7 +6,7 @@ Transform a single note of newline separated items into a checkable list. The ch
 - Lightweight (<2MB).
 - No sign-in needed.
 - Shows counts of completed as well as pending items.
-- Adaptive layout that adjusts according to available screen space
+- Adaptive layout that adjusts according to available screen space.
 
 ## Screenshots
 ![Home](screenshots/Home.png)
